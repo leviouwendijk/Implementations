@@ -1,5 +1,5 @@
 {
-  "originHash" : "3ddb27bbcf3121a6deba01ce80d58f6487f5d60caaa71224cd41599c825b587f",
+  "originHash" : "976fb27827aa7ee9983e62bd8ed000c07e155a0bf2a6ca81740e1c2bbe3cc85b",
   "pins" : [
     {
       "identity" : "economics",
@@ -26,6 +26,15 @@
       "state" : {
         "branch" : "master",
         "revision" : "f5987dd862c26a48b2f94f70d1fb31af41fdc197"
+      }
+    },
+    {
+      "identity" : "structures",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Structures.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "a4b6ab7dcbe90134c491a091ef7915adc37b46d9"
       }
     }
   ],
