@@ -3,6 +3,7 @@ import SwiftUI
 import Combine
 import Interfaces
 import plate
+import Structures
 
 @MainActor
 public class ContactsListViewModel: ObservableObject {
