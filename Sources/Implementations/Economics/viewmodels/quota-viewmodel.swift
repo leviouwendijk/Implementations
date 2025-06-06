@@ -12,6 +12,8 @@ public class QuotaViewModel: ObservableObject {
     @Published public var errorMessage = ""
     // @Published public var errorMessage: String? = nil
 
+    @Published public var selectedTier: QuotaTierType = .combined
+
     private var cancellables = Set<AnyCancellable>()
 
     // private var debounceQuotaTask: Task<Void, Never>? = nil
