@@ -6,6 +6,20 @@ import Interfaces
 import Contacts
 import Economics
 
+// small helper
+public struct TemplateFetchResponse: Decodable {
+    public let success: Bool
+    public let html: String
+    
+    public init(
+        success: Bool,
+        html: String
+    ) {
+        self.success = success
+        self.html = html
+    }
+}
+
 @MainActor
 public class MailerViewModel: ObservableObject {
     public var invoiceVm = MailerAPIInvoiceVariablesViewModel()
@@ -155,5 +169,131 @@ public class MailerViewModel: ObservableObject {
 
     public func updateCommandInViewModel(newValue: String) {
         sharedMailerCommandCopy = newValue
+    }
+
+
+    public func cleanThisView() {
+        clearContact()
+        if includeQuoteInCustomMessage {
+            includeQuoteInCustomMessage = false
+        }
+    }
+    
+    public func sendMailerEmail() throws {
+        mailerOutput = ""
+
+        withAnimation { isSendingEmail = true }
+
+        let arguments = try constructMailerCommand(false)
+
+        let argsWithBinary = try constructMailerCommand(true)
+        updateCommandInViewModel(newValue: argsWithBinary)
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            let home = Home.string()
+            let proc = Process()
+            proc.executableURL = URL(fileURLWithPath: "/bin/zsh")
+            proc.arguments = ["-c", "source ~/dotfiles/.vars.zsh && \(home)/sbm-bin/mailer \(arguments)"]
+
+            let outPipe = Pipe(), errPipe = Pipe()
+            proc.standardOutput = outPipe
+            proc.standardError  = errPipe
+
+            // whenever stdout or stderr arrives, append it to mailerOutput
+            func install(_ handle: FileHandle) {
+                handle.readabilityHandler = { h in
+                    let data = h.availableData
+                    guard !data.isEmpty, let str = String(data: data, encoding: .utf8) else { return }
+                    DispatchQueue.main.async {
+                        self.mailerOutput += str
+                    }
+                }
+            }
+            install(outPipe.fileHandleForReading)
+            install(errPipe.fileHandleForReading)
+
+            do {
+                try proc.run()
+            } catch {
+                DispatchQueue.main.async {
+                    self.mailerOutput += "launch failed: \(error.localizedDescription)\n"
+                }
+            }
+
+            proc.waitUntilExit()
+
+            DispatchQueue.main.async {
+                // stop spinner
+                withAnimation { self.isSendingEmail = false }
+
+                // banner
+                self.successBannerMessage = proc.terminationStatus == 0 ? "mailer completed successfully." : "mailer exited with code \(proc.terminationStatus)."
+                self.showSuccessBanner = true
+
+                // color mechanism:
+                // 1) try grab the HTTP status line
+                if let codeStr = self.mailerOutput.firstCapturedGroup(
+                        pattern: #"HTTP Status Code:\s*(\d{3})"#,
+                        options: .caseInsensitive
+                     ),
+                    let code = Int(codeStr)
+                {
+                    self.httpStatus  = code
+                    self.bannerColor = (200..<300).contains(code) ? .green : .red
+                }
+                // 2) grab the *last* {...} JSON
+                if let jsonRange = self.mailerOutput.range(
+                     of: #"\{[\s\S]*\}"#,
+                     options: [.regularExpression, .backwards]
+                   )
+                {
+                  let blob = String(self.mailerOutput[jsonRange])
+                  if let d    = blob.data(using: .utf8),
+                     let resp = try? JSONDecoder().decode(APIError.self, from: d)
+                  {
+                    // override color/message based on server response
+                    self.bannerColor        = resp.success ? .green : .red
+                    self.successBannerMessage = resp.message
+
+                    if resp.success {
+                        self.cleanThisView()
+                    }
+                  }
+                }
+                // end of color mechanism
+
+                // also parse / extract html body if it was a template call:
+                if (self.apiPathVm.isTemplateFetch) {
+                    if let jsonRange = self.mailerOutput.range(
+                        of: #"\{[\s\S]*\}"#, 
+                        options: [.regularExpression, .backwards]
+                        )
+                    {
+                    let blob = String(self.mailerOutput[jsonRange])
+                    if let data = blob.data(using: .utf8),
+                        let resp = try? JSONDecoder().decode(TemplateFetchResponse.self, from: data),
+                        resp.success
+                        {
+                            self.fetchedHtml = resp.html
+                        }
+                    }
+                }
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    withAnimation { self.showSuccessBanner = false }
+                }
+            }
+        }
+    }
+
+    public func clearContact() {
+        client = ""
+        email = ""
+        dog = ""
+        location = ""
+        areaCode = ""
+        street = ""
+        number = ""
+        selectedContact = nil
     }
 }
