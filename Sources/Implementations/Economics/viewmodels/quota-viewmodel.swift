@@ -135,11 +135,16 @@ public class QuotaViewModel: ObservableObject {
     }
 
     public func loadTiers() throws {
-        if let loaded = loadedQuota {
-            let t = try loaded.tiers()
+        guard let loaded = loadedQuota else {
             DispatchQueue.main.async {
-                self.tiers = t
+                self.errorMessage = "Quota not set"
             }
+            return
+        }
+
+        let t = try loaded.tiers()
+        DispatchQueue.main.async {
+            self.tiers = t
         }
     }
 }
