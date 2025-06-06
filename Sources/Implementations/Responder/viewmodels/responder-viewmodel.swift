@@ -22,13 +22,10 @@ public struct TemplateFetchResponse: Decodable {
 
 @MainActor
 public class ResponderViewModel: ObservableObject {
-    public var invoiceVm = MailerAPIInvoiceVariablesViewModel()
-    public var weeklyScheduleVm = WeeklyScheduleViewModel()
-    public var contactsVm = ContactsListViewModel()
-    public var apiPathVm = MailerAPISelectionViewModel()
-
-    // Economics
-    // public var quotaVm = QuotaViewModel()
+    @Published public var invoiceVm = MailerAPIInvoiceVariablesViewModel()
+    @Published public var weeklyScheduleVm = WeeklyScheduleViewModel()
+    @Published public var contactsVm = ContactsListViewModel()
+    @Published public var apiPathVm = MailerAPISelectionViewModel()
 
     @Published public var mailerOutput: String = ""
     @Published public var sharedMailerCommandCopy: String = ""
