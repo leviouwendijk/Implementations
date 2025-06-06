@@ -21,7 +21,7 @@ public struct TemplateFetchResponse: Decodable {
 }
 
 @MainActor
-public class MailerViewModel: ObservableObject {
+public class ResponderViewModel: ObservableObject {
     public var invoiceVm = MailerAPIInvoiceVariablesViewModel()
     public var weeklyScheduleVm = WeeklyScheduleViewModel()
     public var contactsVm = ContactsListViewModel()
