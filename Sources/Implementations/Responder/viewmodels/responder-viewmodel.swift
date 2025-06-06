@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 import SwiftUI
 import plate
 import Structures
@@ -138,7 +139,25 @@ public class ResponderViewModel: ObservableObject {
         }
     }
 
-    public init() {}
+    private var cancellables: [AnyCancellable] = []
+
+    public init() {
+        invoiceVm.objectWillChange
+            .sink { [weak self] in self?.objectWillChange.send() }
+            .store(in: &cancellables)
+
+        weeklyScheduleVm.objectWillChange
+            .sink { [weak self] in self?.objectWillChange.send() }
+            .store(in: &cancellables)
+
+        contactsVm.objectWillChange
+            .sink { [weak self] in self?.objectWillChange.send() }
+            .store(in: &cancellables)
+
+        apiPathVm.objectWillChange
+            .sink { [weak self] in self?.objectWillChange.send() }
+            .store(in: &cancellables)
+    }
 
     public func constructMailerCommand(_ includeBinaryName: Bool = false) throws -> String {
         let stateVars = MailerCLIStateVariables(
