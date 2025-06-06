@@ -10,7 +10,8 @@ public class QuotaViewModel: ObservableObject {
     @Published public private(set) var isLoading: Bool = false
 
     @Published public var errorMessage = ""
-    // @Published public var errorMessage: String? = nil
+
+    @Published public var tiers: [QuotaTierContent]? = nil
 
     @Published public var selectedTier: QuotaTierType = .combined
 
