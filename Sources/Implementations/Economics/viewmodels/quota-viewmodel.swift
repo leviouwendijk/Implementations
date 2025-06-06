@@ -73,6 +73,22 @@ public class QuotaViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellables)
+
+        $loadedQuota
+            .compactMap { $0 }
+            .sink { [weak self] quota in
+                do {
+                    let t = try quota.tiers()
+                    DispatchQueue.main.async {
+                        self?.tiers = t
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        self?.errorMessage = error.localizedDescription
+                    }
+                }
+            }
+            .store(in: &cancellables)
     }
 
     // public func compute() {
@@ -132,19 +148,5 @@ public class QuotaViewModel: ObservableObject {
         }
 
         return false
-    }
-
-    public func loadTiers() throws {
-        guard let loaded = loadedQuota else {
-            DispatchQueue.main.async {
-                self.errorMessage = "Quota not set"
-            }
-            return
-        }
-
-        let t = try loaded.tiers()
-        DispatchQueue.main.async {
-            self.tiers = t
-        }
     }
 }
