@@ -133,4 +133,13 @@ public class QuotaViewModel: ObservableObject {
 
         return false
     }
+
+    public func loadTiers() throws {
+        if let loaded = loadedQuota {
+            let t = try loaded.tiers()
+            DispatchQueue.main.async {
+                self.tiers = t
+            }
+        }
+    }
 }
