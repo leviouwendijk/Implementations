@@ -169,7 +169,7 @@ public class QuotaViewModel: ObservableObject {
             str.append("\n")
         }
 
-        let inputs = try quota.shortInputs(for: selectedTier)
+        let inputs = length == .short ? try quota.shortInputs(for: selectedTier) : quota.inputs()
 
         str.append(inputs)
         return str
