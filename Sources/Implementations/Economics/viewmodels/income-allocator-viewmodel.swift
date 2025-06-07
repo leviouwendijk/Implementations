@@ -14,11 +14,13 @@ public class IncomeAllocatorViewModel: ObservableObject {
     @Published public private(set) var periodsToAccountText: String = ""
     @Published public private(set) var projectedBalanceText: String = ""
 
-    private let allocations: [IncomeAllocation]?
+    private let allocations: [IncomeAllocation]
     private var cancellables = Set<AnyCancellable>()
 
-    public init(allocations: [IncomeAllocation]? = nil) {
-        self.allocations = allocations
+    public init(
+        allocations: [IncomeAllocation]?
+    ) {
+        self.allocations = allocations ?? IncomeAllocationProvider.defaults().sorted(by: { $0.order < $1.order })
         bindInputs()
         recalculateAllocations()
         recalculateTargets()
@@ -42,10 +44,7 @@ public class IncomeAllocatorViewModel: ObservableObject {
     }
 
     private func recalculateAllocations() {
-        guard
-            let allocations = allocations,
-            let income = Double(incomeText), income > 0
-        else {
+        guard let income = Double(incomeText), income > 0 else {
             allocationResults = []
             return
         }
@@ -57,10 +56,7 @@ public class IncomeAllocatorViewModel: ObservableObject {
     }
 
     private func recalculateTargets() {
-        guard
-            let allocations = allocations,
-            let income = Double(incomeText), income > 0
-        else {
+        guard let income = Double(incomeText), income > 0 else {
             periodsToGrossText = ""
             periodsToAccountText = ""
             projectedBalanceText = ""
