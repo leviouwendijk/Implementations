@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 import Economics
+import Structures
 
 @MainActor
 public class QuotaViewModel: ObservableObject {
@@ -148,5 +149,29 @@ public class QuotaViewModel: ObservableObject {
         }
 
         return false
+    }
+
+    public func copyable(
+        length: CopyableStringLengthType = .short,
+        clientIdentifier: String? = nil)
+    throws -> String {
+        guard let quota = loadedQuota else { 
+            throw QuotaStringError.quotaIsNil
+        }
+
+        var str = ""
+
+        if let client = clientIdentifier {
+            str.append(client)
+            str.append("\n")
+            let div = String(repeating: "-", count: 55)
+            str.append(div)
+            str.append("\n")
+        }
+
+        let inputs = try quota.shortInputs(for: selectedTier)
+
+        str.append(inputs)
+        return str
     }
 }
