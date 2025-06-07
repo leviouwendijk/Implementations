@@ -54,7 +54,7 @@ public class IncomeAllocatorViewModel: ObservableObject {
         let allocator = IncomeAllocator(income: income, allocations: allocations)
         let summary = allocator.divide()
         allocationResults = summary.entries.map { entry in
-            return "\(entry.allocation.account.rawValue): \(entry.result.display(decimals: 3))"
+            return "\(entry.allocation.account.rawValue): \(entry.result.display())"
         }
     }
 
