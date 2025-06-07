@@ -29,7 +29,10 @@ public class IncomeAllocatorViewModel: ObservableObject {
     private func bindInputs() {
         $incomeText
             .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
-            .sink { [weak self] _ in self?.recalculateAllocations() }
+            .sink { [weak self] _ in 
+                self?.recalculateAllocations()
+                self?.recalculateTargets()
+            }
             .store(in: &cancellables)
 
         Publishers.CombineLatest4(
