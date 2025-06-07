@@ -76,20 +76,20 @@ public class QuotaViewModel: ObservableObject {
             .store(in: &cancellables)
 
         $loadedQuota
-            .compactMap { $0 }
-            .sink { [weak self] quota in
+        .sink { [weak self] quota in
+            guard let self = self else { return }
+            if let quota = quota {
                 do {
-                    let t = try quota.tiers()
-                    DispatchQueue.main.async {
-                        self?.tiers = t
-                    }
+                    self.tiers = try quota.tiers()
                 } catch {
-                    DispatchQueue.main.async {
-                        self?.errorMessage = error.localizedDescription
-                    }
+                    self.errorMessage = error.localizedDescription
+                    self.tiers = nil
                 }
+            } else {
+                self.tiers = nil
             }
-            .store(in: &cancellables)
+        }
+        .store(in: &cancellables)
     }
 
     // public func compute() {
