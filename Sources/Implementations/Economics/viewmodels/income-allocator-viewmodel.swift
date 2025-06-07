@@ -18,9 +18,9 @@ public class IncomeAllocatorViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     public init(
-        allocations: [IncomeAllocation]?
+        allocations: [IncomeAllocation]? = nil
     ) {
-        self.allocations = allocations ?? IncomeAllocationProvider.defaults().sorted(by: { $0.order < $1.order })
+        self.allocations = allocations?.sorted(by: { $0.order < $1.order }) ?? IncomeAllocationProvider.defaults().sorted(by: { $0.order < $1.order })
         bindInputs()
         recalculateAllocations()
         recalculateTargets()
