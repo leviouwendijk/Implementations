@@ -23,7 +23,7 @@ public class QuotaViewModel: ObservableObject {
     
     public init() {
         self.customQuotaInputs = CustomQuotaInputs(
-            base: "350",
+            base: "360",
             prognosis: SessionCountEstimationInputs(
                 count: "5",
                 local: "4"
