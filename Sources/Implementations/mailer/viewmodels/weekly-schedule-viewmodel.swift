@@ -1,6 +1,7 @@
 import SwiftUI
 import Combine
 import Interfaces
+import Structures
 
 public class WeeklyScheduleViewModel: ObservableObject {
     @Published public var schedules: [MailerAPIWeekday: MailerAPIDaySchedule]

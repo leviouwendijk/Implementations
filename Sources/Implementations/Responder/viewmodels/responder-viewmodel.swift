@@ -268,7 +268,7 @@ public class ResponderViewModel: ObservableObject {
             route: apiPathVm.selectedRoute,
             endpoint: apiPathVm.selectedEndpoint,
             availabilityJSON: try? weeklyScheduleVm.availabilityJSON(),
-            // appointmentsJSON: try? appointmentsJSON(),
+            appointmentsJSON: appointmentsQueue.jsonString(),
             needsAvailability: apiPathVm.endpointNeedsAvailabilityVariable,
             stateVariables: stateVars
         )
