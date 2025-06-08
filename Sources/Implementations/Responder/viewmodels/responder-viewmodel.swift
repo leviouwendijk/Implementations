@@ -39,8 +39,9 @@ public class ResponderViewModel: ObservableObject {
     @Published public var areaCode: String?
     @Published public var street: String?
     @Published public var number: String?
-    @Published public var localLocation = "Alkmaar"
     @Published public var local = false
+    @Published public var localLocation = "Alkmaar"
+    @Published public var localStreet = "Prins Hendrikstraat"
 
     @Published public var searchQuery = ""
     @Published public var contacts: [CNContact] = []
@@ -64,15 +65,105 @@ public class ResponderViewModel: ObservableObject {
 
     @Published public var selectedWAMessage: WAMessageTemplate = .called
 
-    // public var filteredContacts: [CNContact] {
-    //     if searchQuery.isEmpty { return contacts }
-    //     let normalizedQuery = searchQuery.normalizedForClientDogSearch
-    //     return contacts.filter {
-    //         $0.givenName.normalizedForClientDogSearch.contains(normalizedQuery) ||
-    //         $0.familyName.normalizedForClientDogSearch.contains(normalizedQuery) ||
-    //         (($0.emailAddresses.first?.value as String?)?.normalizedForClientDogSearch.contains(normalizedQuery) ?? false)
-    //     }
-    // }
+
+
+
+    // ADDING DATE PICKER 
+    @Published public var year = Calendar.current.component(.year, from: Date())
+    @Published public var selectedMonth = Calendar.current.component(.month, from: Date()) {
+        didSet { validateDay() }
+    }
+    @Published public var selectedDay = Calendar.current.component(.day, from: Date())
+    @Published public var selectedHour = 12
+    @Published public var selectedMinute = 0
+    @Published public var outputFormat = "yyyy-MM-dd HH:mm"
+    
+    public let months = Calendar.current.monthSymbols
+    public let hours = Array(0...23)
+    public let minutes = Array(0...59)
+
+    @Published public var appointmentsQueue: [MailerAPIAppointmentContent] = [] 
+    
+    public var days: [Int] {
+        let dateComponents = DateComponents(year: year, month: selectedMonth)
+        if let range = Calendar.current.range(of: .day, in: .month, for: Calendar.current.date(from: dateComponents)!) {
+            return Array(range)
+        }
+        return Array(1...31)
+    }
+    
+    public func validateDay() {
+        if selectedDay > days.count {
+            selectedDay = days.count
+        }
+    }
+    
+    public var formattedDate: String {
+        let dateComponents = DateComponents(year: year, month: selectedMonth, day: selectedDay, hour: selectedHour, minute: selectedMinute)
+        if let date = Calendar.current.date(from: dateComponents) {
+            let formatter = DateFormatter()
+            formatter.dateFormat = outputFormat
+            return formatter.string(from: date)
+        }
+        return ""
+    }
+
+    public var cliDate: String {
+        return String(format: "%02d/%02d/%04d", selectedDay, selectedMonth, year)
+    }
+
+    public var cliTime: String {
+        return String(format: "%02d:%02d", selectedHour, selectedMinute)
+    }
+
+
+    public func createAppointment() -> MailerAPIAppointmentContent {
+        let dateString = String(format: "%02d/%02d/%04d", selectedDay, selectedMonth, year)
+        let timeString = String(format: "%02d:%02d", selectedHour, selectedMinute)
+        let dayString = getDayName(day: selectedDay, month: selectedMonth, year: year)
+
+        return MailerAPIAppointmentContent(
+            date: dateString,
+            time: timeString,
+            day: dayString,
+            street: local ? localStreet : (street ?? ""),
+            number: local ? "" : (number ?? ""),
+            area: local ? "" : (areaCode ?? ""),
+            location: local ? localLocation : location
+        )
+    }
+
+    public func addToQueue() {
+        let newAppointment = createAppointment()
+        if !appointmentsQueue.contains(where: { $0.date == newAppointment.date && $0.time == newAppointment.time }) {
+            appointmentsQueue.append(newAppointment)
+        }
+    }
+
+    public func clearQueue() {
+        appointmentsQueue.removeAll()
+    }
+
+    public func removeAppointment(at index: Int) {
+        appointmentsQueue.remove(at: index)
+    }
+
+    public func getDayName(day: Int, month: Int, year: Int) -> String {
+        let dateComponents = DateComponents(year: year, month: month, day: day)
+        let calendar = Calendar.current
+        if let date = calendar.date(from: dateComponents) {
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "nl_NL") 
+            formatter.dateFormat = "EEEE"
+            return formatter.string(from: date).capitalized
+        }
+        return "Onbekend"
+    }
+    // END OF ADD DATE PICKER
+
+
+
+
 
     public var finalEmail: String {
         email
@@ -177,6 +268,7 @@ public class ResponderViewModel: ObservableObject {
             route: apiPathVm.selectedRoute,
             endpoint: apiPathVm.selectedEndpoint,
             availabilityJSON: try? weeklyScheduleVm.availabilityJSON(),
+            // appointmentsJSON: try? appointmentsJSON(),
             needsAvailability: apiPathVm.endpointNeedsAvailabilityVariable,
             stateVariables: stateVars
         )
