@@ -19,6 +19,10 @@ public class IncomeAllocatorAccountsViewModel: ObservableObject {
     private let allocations: [IncomeAllocation]
     private var cancellables = Set<AnyCancellable>()
 
+    public var incomeTextCleaned: String { incomeText.cleanedNumberInput() }
+    public var grossTargetTextCleaned: String { grossTargetText.cleanedNumberInput() }
+    public var accountTargetTextCleaned: String { accountTargetText.cleanedNumberInput() }
+
     public init(
         allocations: [IncomeAllocation]? = nil
     ) {
@@ -53,7 +57,7 @@ public class IncomeAllocatorAccountsViewModel: ObservableObject {
     }
 
     private func recalculateAllocations() {
-        guard let income = Double(incomeText), income > 0 else {
+        guard let income = Double(incomeTextCleaned), income > 0 else {
             allocationResults = []
             return
         }
@@ -72,7 +76,7 @@ public class IncomeAllocatorAccountsViewModel: ObservableObject {
     }
 
     private func recalculateTargets() {
-        guard let income = Double(incomeText), income > 0 else {
+        guard let income = Double(incomeTextCleaned), income > 0 else {
             periodsToGrossText = ""
             periodsToAccountText = ""
             projectedBalanceText = ""
@@ -80,14 +84,14 @@ public class IncomeAllocatorAccountsViewModel: ObservableObject {
         }
         let allocator = IncomeAllocator(income: income, allocations: allocations)
 
-        if let grossTarget = Double(grossTargetText), grossTarget > 0 {
+        if let grossTarget = Double(grossTargetTextCleaned), grossTarget > 0 {
             let periods = allocator.periodsToReachGross(target: grossTarget)
             periodsToGrossText = "Gross target in ~\(periods) periods"
         } else {
             periodsToGrossText = ""
         }
 
-        if let accountTarget = Double(accountTargetText), accountTarget > 0 {
+        if let accountTarget = Double(accountTargetTextCleaned), accountTarget > 0 {
             if let periods = allocator.periodsToReach(target: accountTarget, in: selectedAccount) {
                 periodsToAccountText = "\(selectedAccount.rawValue) target in ~\(periods) periods"
             } else {
