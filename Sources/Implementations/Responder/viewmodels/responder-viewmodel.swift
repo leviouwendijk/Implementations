@@ -144,8 +144,8 @@ public class ResponderViewModel: ObservableObject {
         appointmentsQueue.removeAll()
     }
 
-    public func removeAppointment(at index: Int) {
-        appointmentsQueue.remove(at: index)
+    public func removeAppointment(_ appointment: MailerAPIAppointmentContent) {
+        appointmentsQueue.removeAll(where: { $0.id == appointment.id })
     }
 
     public func getDayName(day: Int, month: Int, year: Int) -> String {
