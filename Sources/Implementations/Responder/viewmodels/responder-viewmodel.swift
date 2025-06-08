@@ -282,6 +282,7 @@ public class ResponderViewModel: ObservableObject {
 
     public func cleanThisView() {
         clearContact()
+        clearQueue()
         if includeQuoteInCustomMessage {
             includeQuoteInCustomMessage = false
         }
