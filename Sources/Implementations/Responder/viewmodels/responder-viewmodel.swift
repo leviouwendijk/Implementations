@@ -85,11 +85,14 @@ public class ResponderViewModel: ObservableObject {
     @Published public var appointmentsQueue: [MailerAPIAppointmentContent] = [] 
     
     public var days: [Int] {
-        let dateComponents = DateComponents(year: year, month: selectedMonth)
-        if let range = Calendar.current.range(of: .day, in: .month, for: Calendar.current.date(from: dateComponents)!) {
-            return Array(range)
+        let comps = DateComponents(year: year, month: selectedMonth)
+        guard
+            let date = Calendar.current.date(from: comps),
+            let range = Calendar.current.range(of: .day, in: .month, for: date)
+        else {
+            return Array(1...31)
         }
-        return Array(1...31)
+        return Array(range)
     }
     
     public func validateDay() {
