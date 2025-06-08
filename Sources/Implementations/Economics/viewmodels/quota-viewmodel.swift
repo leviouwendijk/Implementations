@@ -41,7 +41,7 @@ public class QuotaViewModel: ObservableObject {
                 speed: "80.0",
                 rates: TravelCostRatesInputs(
                     travel: "0.25", 
-                    time: "105"
+                    time: "80"
                 ),
                 roundTrip: true
             )

@@ -18,7 +18,6 @@ public class IncomeAllocatorViewModel: ObservableObject {
         } catch {
             self.errorMessage = error.localizedDescription
         }
-
     }
 
     public func bind() {
