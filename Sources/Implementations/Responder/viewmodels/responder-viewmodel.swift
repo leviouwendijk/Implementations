@@ -356,18 +356,18 @@ public class ResponderViewModel: ObservableObject {
                      options: [.regularExpression, .backwards]
                    )
                 {
-                  let blob = String(self.mailerOutput[jsonRange])
-                  if let d    = blob.data(using: .utf8),
-                     let resp = try? JSONDecoder().decode(APIError.self, from: d)
-                  {
-                    // override color/message based on server response
-                    self.bannerColor        = resp.success ? .green : .red
-                    self.successBannerMessage = resp.message
+                    let blob = String(self.mailerOutput[jsonRange])
+                    if let d    = blob.data(using: .utf8),
+                        let resp = try? JSONDecoder().decode(APIError.self, from: d)
+                    {
+                        // override color/message based on server response
+                        self.bannerColor        = resp.success ? .green : .red
+                        self.successBannerMessage = resp.message
 
-                    if resp.success {
-                        self.cleanThisView()
+                        if resp.success {
+                            self.cleanThisView()
+                        }
                     }
-                  }
                 }
                 // end of color mechanism
 
