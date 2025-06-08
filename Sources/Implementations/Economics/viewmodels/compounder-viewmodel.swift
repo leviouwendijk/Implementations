@@ -3,10 +3,10 @@ import Combine
 import Economics
 
 public class CompounderViewModel: ObservableObject {
-    @Published public var principalText: String = ""
-    @Published public var annualRateText: String = ""
+    @Published public var principalText: String = "0"
+    @Published public var annualRateText: String = "10"
     @Published public var monthlyInvestmentText: String = ""
-    @Published public var yearsText: String = ""
+    @Published public var yearsText: String = "10"
     @Published public var rounding: Bool = false
     @Published public var calculationTime: CompoundTime = .end
 
