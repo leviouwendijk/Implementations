@@ -138,17 +138,23 @@ public class ResponderViewModel: ObservableObject {
 
     public func addToQueue() {
         let newAppointment = createAppointment()
-        if !appointmentsQueue.contains(where: { $0.date == newAppointment.date && $0.time == newAppointment.time }) {
-            appointmentsQueue.append(newAppointment)
+        DispatchQueue.main.async {
+            if !self.appointmentsQueue.contains(where: { 
+                $0.date == newAppointment.date && $0.time == newAppointment.time 
+            }) {
+                self.appointmentsQueue.append(newAppointment)
+            }
+        }
+    }
+
+    public func removeAppointment(_ appointment: MailerAPIAppointmentContent) {
+        DispatchQueue.main.async {
+            self.appointmentsQueue.removeAll { $0.id == appointment.id }
         }
     }
 
     public func clearQueue() {
         appointmentsQueue.removeAll()
-    }
-
-    public func removeAppointment(_ appointment: MailerAPIAppointmentContent) {
-        appointmentsQueue.removeAll(where: { $0.id == appointment.id })
     }
 
     public func getDayName(day: Int, month: Int, year: Int) -> String {
