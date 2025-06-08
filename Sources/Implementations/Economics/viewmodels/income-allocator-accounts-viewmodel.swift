@@ -23,10 +23,13 @@ public class IncomeAllocatorAccountsViewModel: ObservableObject {
     public var grossTargetTextCleaned: String { grossTargetText.cleanedNumberInput() }
     public var accountTargetTextCleaned: String { accountTargetText.cleanedNumberInput() }
 
+    public var errorMessage = ""
+
     public init(
         allocations: [IncomeAllocation]? = nil
-    ) {
-        self.allocations = allocations?.sorted(by: { $0.order < $1.order }) ?? IncomeAllocationProvider.defaults().sorted(by: { $0.order < $1.order })
+    ) throws {
+        let defaults = try IncomeAllocationProvider.defaults()
+        self.allocations = allocations?.sorted(by: { $0.order < $1.order }) ?? defaults.sorted(by: { $0.order < $1.order })
         bindInputs()
         recalculateAllocations()
         recalculateTargets()

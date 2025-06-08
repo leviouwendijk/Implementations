@@ -3,12 +3,15 @@ import Combine
 import Economics
 
 public class IncomeAllocatorViewModel: ObservableObject {
-    public var allocatorVm: IncomeAllocatorAccountsViewModel = IncomeAllocatorAccountsViewModel()
-    public var compounderVm: CompounderViewModel = CompounderViewModel()
+    public var allocatorVm: IncomeAllocatorAccountsViewModel
+    public var compounderVm: CompounderViewModel
 
     private var cancellables = Set<AnyCancellable>()
 
-    public init() {
+    public init() throws {
+        self.compounderVm = CompounderViewModel()
+        self.allocatorVm = try IncomeAllocatorAccountsViewModel()
+
         allocatorVm.$selectedAccountAmount
             .map { newValue in
                 return String(format: "%.2f", newValue)
