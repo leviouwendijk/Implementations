@@ -8,7 +8,7 @@ public class IncomeAllocatorViewModel: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
 
-    @Published var errorMessage: String = ""
+    @Published public var errorMessage: String = ""
 
     public init() {
         self.compounderVm = CompounderViewModel()
