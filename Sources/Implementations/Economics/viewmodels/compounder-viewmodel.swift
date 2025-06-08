@@ -20,7 +20,7 @@ public class CompounderViewModel: ObservableObject {
         bindInputs()
     }
 
-    private func bindInputs() {
+    public func bindInputs() {
         Publishers.CombineLatest4(
             $principalText,
             $annualRateText,
@@ -36,7 +36,7 @@ public class CompounderViewModel: ObservableObject {
         .store(in: &cancellables)
     }
 
-    private func calculate() {
+    public func calculate() {
         let principal = Double(principalText.filter { "0123456789.".contains($0) }) ?? 0
         let annualRate = Double(annualRateText.filter { "0123456789.".contains($0) }) ?? 0
         let monthlyInvestment = Double(monthlyInvestmentText.filter { "0123456789.".contains($0) }) ?? 0
@@ -65,7 +65,7 @@ public class CompounderViewModel: ObservableObject {
         totalReturnText = "Total Return (Profit): €\(result.return.display())"
     }
 
-    private func clearOutputs() {
+    public func clearOutputs() {
         totalInvestedText = ""
         finalValueText = ""
         totalReturnText = ""
