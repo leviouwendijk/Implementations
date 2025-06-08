@@ -3,9 +3,9 @@ import Combine
 import Economics
 
 public class IncomeAllocatorAccountsViewModel: ObservableObject {
-    @Published public var incomeText: String = "2000"
-    @Published public var grossTargetText: String = "1000000"
-    @Published public var accountTargetText: String = "500000"
+    @Published public var incomeText: String = "2_500"
+    @Published public var grossTargetText: String = "1_000_000"
+    @Published public var accountTargetText: String = "500_000"
     @Published public var selectedAccount: IncomeAllocationAccount = .savings
     @Published public var periodsText: String = "12"
 
