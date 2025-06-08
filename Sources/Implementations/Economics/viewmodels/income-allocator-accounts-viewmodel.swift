@@ -93,7 +93,7 @@ public class IncomeAllocatorAccountsViewModel: ObservableObject {
 
         if let accountTarget = Double(accountTargetTextCleaned), accountTarget > 0 {
             if let periods = allocator.periodsToReach(target: accountTarget, in: selectedAccount) {
-                periodsToAccountText = "\(selectedAccount.rawValue) target in ~\(periods) periods"
+                periodsToAccountText = "\(selectedAccount.rawValue) target in ~\(periods) periods (\(periods / 12) yrs)"
             } else {
                 periodsToAccountText = "No allocation for \(selectedAccount.rawValue)"
             }
