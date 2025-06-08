@@ -7,7 +7,7 @@ public class IncomeAllocatorViewModel: ObservableObject {
     @Published public var grossTargetText: String = "1000000"
     @Published public var accountTargetText: String = "500000"
     @Published public var selectedAccount: IncomeAllocationAccount = .savings
-    @Published public var periodsText: String = ""
+    @Published public var periodsText: String = "12"
 
     @Published public private(set) var allocationResults: [String] = []
     @Published public private(set) var periodsToGrossText: String = ""
