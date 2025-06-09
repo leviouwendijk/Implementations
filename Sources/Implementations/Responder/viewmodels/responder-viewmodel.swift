@@ -303,6 +303,7 @@ public class ResponderViewModel: ObservableObject {
             availabilityJSON: try? weeklyScheduleVm.availabilityJSON(),
             appointmentsJSON: try? appointmentsQueue.jsonString(),
             needsAvailability: apiPathVm.endpointNeedsAvailabilityVariable,
+            isAppointmentRoute: (apiPathVm.selectedRoute == .appointment),
             stateVariables: stateVars
         )
         return try args.string(includeBinaryName)
