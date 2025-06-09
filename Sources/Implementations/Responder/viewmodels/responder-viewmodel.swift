@@ -165,31 +165,25 @@ public class ResponderViewModel: ObservableObject {
     }
 
     public func addToQueue() {
-        print("addToQueue called on VM \(Unmanaged.passUnretained(self).toOpaque())")
-        // DispatchQueue.main.async {
-            let newAppointment = self.createAppointment()
-            print("Appt created inside ResponderViewModel: ", newAppointment)
-            if !self.appointmentsQueue.contains(where: { 
-                $0.date == newAppointment.date && $0.time == newAppointment.time 
-            }) {
-                self.appointmentsQueue.append(newAppointment)
-            }
-        // }
-        print("Appointments in Queue:", appointmentsQueue.count)
+        // print("addToQueue called on VM \(Unmanaged.passUnretained(self).toOpaque())")
+        let newAppointment = self.createAppointment()
+        // print("Appt created inside ResponderViewModel: ", newAppointment)
+        if !self.appointmentsQueue.contains(where: { 
+            $0.date == newAppointment.date && $0.time == newAppointment.time 
+        }) {
+            self.appointmentsQueue.append(newAppointment)
+        }
+        // print("Appointments in Queue:", appointmentsQueue.count)
     }
 
     public func removeAppointment(_ appointment: MailerAPIAppointmentContent) {
-        // DispatchQueue.main.async {
-            self.appointmentsQueue.removeAll { $0.id == appointment.id }
-        // }
-        print("Appointments in Queue:", appointmentsQueue.count)
+        self.appointmentsQueue.removeAll { $0.id == appointment.id }
+        // print("Appointments in Queue:", appointmentsQueue.count)
     }
 
     public func clearQueue() {
-        // DispatchQueue.main.async {
-            self.appointmentsQueue.removeAll()
-        // }
-        print("Appointments in Queue:", appointmentsQueue.count)
+        self.appointmentsQueue.removeAll()
+        // print("Appointments in Queue:", appointmentsQueue.count)
     }
 
     // END OF ADD DATE PICKER
