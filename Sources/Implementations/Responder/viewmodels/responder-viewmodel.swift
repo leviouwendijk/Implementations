@@ -308,6 +308,7 @@ public class ResponderViewModel: ObservableObject {
 
 
     public func cleanThisView() {
+        self.contactsVm.resetSelectedContact()
         clearContact()
         clearQueue()
         if includeQuoteInCustomMessage {

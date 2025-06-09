@@ -122,6 +122,10 @@ public class ContactsListViewModel: ObservableObject {
         }
     }
 
+    public func resetSelectedContact() {
+        self.selectedContactId = nil
+    }
+
     // private func scheduleFilterIfNeeded() {
     //     guard !contacts.isEmpty else {
     //         return
