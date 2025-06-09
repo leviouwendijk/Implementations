@@ -70,9 +70,9 @@ public class ResponderViewModel: ObservableObject {
 
     // ADDING DATE PICKER 
     @Published public var year = Calendar.current.component(.year, from: Date())
-    @Published public var selectedMonth = Calendar.current.component(.month, from: Date()) {
-        didSet { validateDay() }
-    }
+    @Published public var selectedMonth = Calendar.current.component(.month, from: Date()) // {
+        // didSet { validateDay() }
+    // }
     @Published public var selectedDay = Calendar.current.component(.day, from: Date())
     @Published public var selectedHour = 12
     @Published public var selectedMinute = 0
@@ -119,7 +119,6 @@ public class ResponderViewModel: ObservableObject {
         return String(format: "%02d:%02d", selectedHour, selectedMinute)
     }
 
-
     public func createAppointment() -> MailerAPIAppointmentContent {
         let dateString = String(format: "%02d/%02d/%04d", selectedDay, selectedMonth, year)
         let timeString = String(format: "%02d:%02d", selectedHour, selectedMinute)
@@ -129,14 +128,15 @@ public class ResponderViewModel: ObservableObject {
             date: dateString,
             time: timeString,
             day: dayString,
-            street: local ? localStreet : (street ?? ""),
-            number: local ? "" : (number ?? ""),
-            area: local ? "" : (areaCode ?? ""),
-            location: local ? localLocation : location
+            street: self.local ? self.localStreet : (self.street ?? ""),
+            number: self.local ? "" : (self.number ?? ""),
+            area: self.local ? "" : (self.areaCode ?? ""),
+            location: self.local ? self.localLocation : self.location
         )
     }
 
     public func addToQueue() {
+        print("addToQueue called on VM \(Unmanaged.passUnretained(self).toOpaque())")
         let newAppointment = createAppointment()
         if !self.appointmentsQueue.contains(where: { 
             $0.date == newAppointment.date && $0.time == newAppointment.time 
