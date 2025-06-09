@@ -94,6 +94,18 @@ public class ResponderViewModel: ObservableObject {
         }
         return Array(range)
     }
+
+    public func getDayName(day: Int, month: Int, year: Int) -> String {
+        let dateComponents = DateComponents(year: year, month: month, day: day)
+        let calendar = Calendar.current
+        if let date = calendar.date(from: dateComponents) {
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "nl_NL") 
+            formatter.dateFormat = "EEEE"
+            return formatter.string(from: date).capitalized
+        }
+        return "Onbekend"
+    }
     
     public func validateDay() {
         if self.selectedDay > self.days.count {
@@ -145,7 +157,7 @@ public class ResponderViewModel: ObservableObject {
 
     public func addToQueue() {
         print("addToQueue called on VM \(Unmanaged.passUnretained(self).toOpaque())")
-        DispatchQueue.main.async {
+        // DispatchQueue.main.async {
             let newAppointment = self.createAppointment()
             print("Appt created inside ResponderViewModel: ", newAppointment)
             if !self.appointmentsQueue.contains(where: { 
@@ -153,33 +165,22 @@ public class ResponderViewModel: ObservableObject {
             }) {
                 self.appointmentsQueue.append(newAppointment)
             }
-        }
+        // }
         print("Appointments in Queue:", appointmentsQueue.count)
     }
 
     public func removeAppointment(_ appointment: MailerAPIAppointmentContent) {
-        DispatchQueue.main.async {
+        // DispatchQueue.main.async {
             self.appointmentsQueue.removeAll { $0.id == appointment.id }
-        }
+        // }
     }
 
     public func clearQueue() {
-        DispatchQueue.main.async {
+        // DispatchQueue.main.async {
             self.appointmentsQueue.removeAll()
-        }
+        // }
     }
 
-    public func getDayName(day: Int, month: Int, year: Int) -> String {
-        let dateComponents = DateComponents(year: year, month: month, day: day)
-        let calendar = Calendar.current
-        if let date = calendar.date(from: dateComponents) {
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: "nl_NL") 
-            formatter.dateFormat = "EEEE"
-            return formatter.string(from: date).capitalized
-        }
-        return "Onbekend"
-    }
     // END OF ADD DATE PICKER
 
 
