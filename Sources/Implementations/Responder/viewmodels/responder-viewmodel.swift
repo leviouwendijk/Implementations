@@ -152,6 +152,7 @@ public class ResponderViewModel: ObservableObject {
         }) {
             self.appointmentsQueue.append(newAppointment)
         }
+        print("Appointments in Queue:", appointmentsQueue.count)
     }
 
     public func removeAppointment(_ appointment: MailerAPIAppointmentContent) {
