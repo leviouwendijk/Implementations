@@ -144,6 +144,14 @@ public class ResponderViewModel: ObservableObject {
         let timeString = String(format: "%02d:%02d", self.selectedHour, self.selectedMinute)
         let dayString = getDayName(day: self.selectedDay, month: self.selectedMonth, year: self.year)
 
+        let comps = DateComponents(
+            year: self.year,
+            month: self.selectedMonth,
+            day: self.selectedDay,
+            hour: self.selectedHour,
+            minute: self.selectedMinute
+        )
+
         return MailerAPIAppointmentContent(
             date: dateString,
             time: timeString,
@@ -151,7 +159,8 @@ public class ResponderViewModel: ObservableObject {
             street: self.local ? self.localStreet : (self.street ?? ""),
             number: self.local ? "" : (self.number ?? ""),
             area: self.local ? "" : (self.areaCode ?? ""),
-            location: self.local ? self.localLocation : self.location
+            location: self.local ? self.localLocation : self.location,
+            dateComponents: comps
         )
     }
 
