@@ -69,10 +69,12 @@ public class ResponderViewModel: ObservableObject {
 
 
     // ADDING DATE PICKER 
+    @Published public var appointmentsQueue: [MailerAPIAppointmentContent] = [] 
+
     @Published public var year = Calendar.current.component(.year, from: Date())
-    @Published public var selectedMonth = Calendar.current.component(.month, from: Date()) // {
-        // didSet { validateDay() }
-    // }
+    @Published public var selectedMonth = Calendar.current.component(.month, from: Date()) {
+        didSet { validateDay() }
+    }
     @Published public var selectedDay = Calendar.current.component(.day, from: Date())
     @Published public var selectedHour = 12
     @Published public var selectedMinute = 0
@@ -81,8 +83,6 @@ public class ResponderViewModel: ObservableObject {
     public let months = Calendar.current.monthSymbols
     public let hours = Array(0...23)
     public let minutes = Array(0...59)
-
-    @Published public var appointmentsQueue: [MailerAPIAppointmentContent] = [] 
     
     public var days: [Int] {
         let comps = DateComponents(year: self.year, month: self.selectedMonth)
@@ -173,12 +173,14 @@ public class ResponderViewModel: ObservableObject {
         // DispatchQueue.main.async {
             self.appointmentsQueue.removeAll { $0.id == appointment.id }
         // }
+        print("Appointments in Queue:", appointmentsQueue.count)
     }
 
     public func clearQueue() {
         // DispatchQueue.main.async {
             self.appointmentsQueue.removeAll()
         // }
+        print("Appointments in Queue:", appointmentsQueue.count)
     }
 
     // END OF ADD DATE PICKER
