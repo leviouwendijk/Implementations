@@ -128,9 +128,9 @@ public class ResponderViewModel: ObservableObject {
     }
 
     public func createAppointment() -> MailerAPIAppointmentContent {
-        let dateString = String(format: "%02d/%02d/%04d", selectedDay, selectedMonth, year)
-        let timeString = String(format: "%02d:%02d", selectedHour, selectedMinute)
-        let dayString = getDayName(day: selectedDay, month: selectedMonth, year: year)
+        let dateString = String(format: "%02d/%02d/%04d", self.selectedDay, self.selectedMonth, self.year)
+        let timeString = String(format: "%02d:%02d", self.selectedHour, self.selectedMinute)
+        let dayString = getDayName(day: self.selectedDay, month: self.selectedMonth, year: self.year)
 
         return MailerAPIAppointmentContent(
             date: dateString,
@@ -145,22 +145,28 @@ public class ResponderViewModel: ObservableObject {
 
     public func addToQueue() {
         print("addToQueue called on VM \(Unmanaged.passUnretained(self).toOpaque())")
-        let newAppointment = createAppointment()
-        print("Appt created inside ResponderViewModel: ", newAppointment)
-        if !self.appointmentsQueue.contains(where: { 
-            $0.date == newAppointment.date && $0.time == newAppointment.time 
-        }) {
-            self.appointmentsQueue.append(newAppointment)
+        DispatchQueue.main.async {
+            let newAppointment = self.createAppointment()
+            print("Appt created inside ResponderViewModel: ", newAppointment)
+            if !self.appointmentsQueue.contains(where: { 
+                $0.date == newAppointment.date && $0.time == newAppointment.time 
+            }) {
+                self.appointmentsQueue.append(newAppointment)
+            }
         }
         print("Appointments in Queue:", appointmentsQueue.count)
     }
 
     public func removeAppointment(_ appointment: MailerAPIAppointmentContent) {
-        self.appointmentsQueue.removeAll { $0.id == appointment.id }
+        DispatchQueue.main.async {
+            self.appointmentsQueue.removeAll { $0.id == appointment.id }
+        }
     }
 
     public func clearQueue() {
-        self.appointmentsQueue.removeAll()
+        DispatchQueue.main.async {
+            self.appointmentsQueue.removeAll()
+        }
     }
 
     public func getDayName(day: Int, month: Int, year: Int) -> String {
@@ -283,8 +289,7 @@ public class ResponderViewModel: ObservableObject {
             route: apiPathVm.selectedRoute,
             endpoint: apiPathVm.selectedEndpoint,
             availabilityJSON: try? weeklyScheduleVm.availabilityJSON(),
-            // appointmentsJSON: try? appointmentsQueue.jsonString(),
-            appointmentsJSON: nil,
+            appointmentsJSON: try? appointmentsQueue.jsonString(),
             needsAvailability: apiPathVm.endpointNeedsAvailabilityVariable,
             stateVariables: stateVars
         )
