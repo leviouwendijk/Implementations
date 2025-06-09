@@ -85,7 +85,7 @@ public class ResponderViewModel: ObservableObject {
     @Published public var appointmentsQueue: [MailerAPIAppointmentContent] = [] 
     
     public var days: [Int] {
-        let comps = DateComponents(year: year, month: selectedMonth)
+        let comps = DateComponents(year: self.year, month: self.selectedMonth)
         guard
             let date = Calendar.current.date(from: comps),
             let range = Calendar.current.range(of: .day, in: .month, for: date)
@@ -96,27 +96,35 @@ public class ResponderViewModel: ObservableObject {
     }
     
     public func validateDay() {
-        if selectedDay > days.count {
-            selectedDay = days.count
+        if self.selectedDay > self.days.count {
+            self.selectedDay = self.days.count
         }
     }
     
     public var formattedDate: String {
-        let dateComponents = DateComponents(year: year, month: selectedMonth, day: selectedDay, hour: selectedHour, minute: selectedMinute)
-        if let date = Calendar.current.date(from: dateComponents) {
+        let dateComponents = DateComponents(
+            year: self.year,
+            month: self.selectedMonth,
+            day: self.selectedDay,
+            hour: self.selectedHour,
+            minute: self.selectedMinute
+        )
+        if let date = Calendar.current.date(
+            from: dateComponents
+        ) {
             let formatter = DateFormatter()
-            formatter.dateFormat = outputFormat
+            formatter.dateFormat = self.outputFormat
             return formatter.string(from: date)
         }
         return ""
     }
 
     public var cliDate: String {
-        return String(format: "%02d/%02d/%04d", selectedDay, selectedMonth, year)
+        return String(format: "%02d/%02d/%04d", self.selectedDay, self.selectedMonth, self.year)
     }
 
     public var cliTime: String {
-        return String(format: "%02d:%02d", selectedHour, selectedMinute)
+        return String(format: "%02d:%02d", self.selectedHour, self.selectedMinute)
     }
 
     public func createAppointment() -> MailerAPIAppointmentContent {
@@ -138,6 +146,7 @@ public class ResponderViewModel: ObservableObject {
     public func addToQueue() {
         print("addToQueue called on VM \(Unmanaged.passUnretained(self).toOpaque())")
         let newAppointment = createAppointment()
+        print("Appt created inside ResponderViewModel: ", newAppointment)
         if !self.appointmentsQueue.contains(where: { 
             $0.date == newAppointment.date && $0.time == newAppointment.time 
         }) {
@@ -150,7 +159,7 @@ public class ResponderViewModel: ObservableObject {
     }
 
     public func clearQueue() {
-        appointmentsQueue.removeAll()
+        self.appointmentsQueue.removeAll()
     }
 
     public func getDayName(day: Int, month: Int, year: Int) -> String {
