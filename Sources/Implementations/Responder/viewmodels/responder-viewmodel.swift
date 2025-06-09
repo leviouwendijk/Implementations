@@ -138,19 +138,15 @@ public class ResponderViewModel: ObservableObject {
 
     public func addToQueue() {
         let newAppointment = createAppointment()
-        DispatchQueue.main.async {
-            if !self.appointmentsQueue.contains(where: { 
-                $0.date == newAppointment.date && $0.time == newAppointment.time 
-            }) {
-                self.appointmentsQueue.append(newAppointment)
-            }
+        if !self.appointmentsQueue.contains(where: { 
+            $0.date == newAppointment.date && $0.time == newAppointment.time 
+        }) {
+            self.appointmentsQueue.append(newAppointment)
         }
     }
 
     public func removeAppointment(_ appointment: MailerAPIAppointmentContent) {
-        DispatchQueue.main.async {
-            self.appointmentsQueue.removeAll { $0.id == appointment.id }
-        }
+        self.appointmentsQueue.removeAll { $0.id == appointment.id }
     }
 
     public func clearQueue() {
@@ -277,7 +273,7 @@ public class ResponderViewModel: ObservableObject {
             route: apiPathVm.selectedRoute,
             endpoint: apiPathVm.selectedEndpoint,
             availabilityJSON: try? weeklyScheduleVm.availabilityJSON(),
-            appointmentsJSON: appointmentsQueue.jsonString(),
+            appointmentsJSON: try? appointmentsQueue.jsonString(),
             needsAvailability: apiPathVm.endpointNeedsAvailabilityVariable,
             stateVariables: stateVars
         )
