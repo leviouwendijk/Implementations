@@ -23,6 +23,8 @@ public class IncomeAllocatorAccountsViewModel: ObservableObject {
     public var grossTargetTextCleaned: String { grossTargetText.cleanedNumberInput() }
     public var accountTargetTextCleaned: String { accountTargetText.cleanedNumberInput() }
 
+    @Published public var textReport: String = ""
+
     public var errorMessage = ""
 
     public init(
@@ -66,6 +68,8 @@ public class IncomeAllocatorAccountsViewModel: ObservableObject {
         }
         let allocator = IncomeAllocator(income: income, allocations: allocations)
         let summary = allocator.divide()
+
+        self.textReport = summary.textReport()
 
         if let entry = summary.entries.first(where: { $0.allocation.account == selectedAccount }) {
             selectedAccountAmount = entry.result

@@ -7,7 +7,7 @@
       "location" : "https://github.com/leviouwendijk/Economics.git",
       "state" : {
         "branch" : "master",
-        "revision" : "2e34543f3bf20efc0ceb245ac886ac7d63305f06"
+        "revision" : "edcc563eaa6f95bfd0385592804817ecbbe0c357"
       }
     },
     {
@@ -16,7 +16,7 @@
       "location" : "https://github.com/leviouwendijk/Interfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "925022bcfa21cbf43868e3bc90e99a41e7116bd6"
+        "revision" : "3ce74acc0c63b715c01e401e5554ddf4090eeea7"
       }
     },
     {
