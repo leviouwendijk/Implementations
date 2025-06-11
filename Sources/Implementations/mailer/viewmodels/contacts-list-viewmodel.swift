@@ -171,7 +171,7 @@ public class ContactsListViewModel: ObservableObject {
                 if Task.isCancelled { break }
 
                 await MainActor.run {
-                    withAnimation(.easeInOut(duration: 0.2)) {
+                    withAnimation(.easeInOut(duration: 0.1)) {
                         self.isFuzzyFiltering = true
                     }
                 }
