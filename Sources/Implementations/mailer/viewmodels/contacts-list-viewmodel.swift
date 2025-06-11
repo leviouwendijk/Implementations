@@ -166,7 +166,6 @@ public class ContactsListViewModel: ObservableObject {
                    scheduler: DispatchQueue.global(qos: .userInitiated)
                 )
                 .values
-                .dropFirst()
 
             for await (allContacts, query, strictness) in updates {
                 if Task.isCancelled { break }
