@@ -170,6 +170,12 @@ public class ContactsListViewModel: ObservableObject {
             for await (allContacts, query, strictness) in updates {
                 if Task.isCancelled { break }
 
+                await MainActor.run {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        self.isFuzzyFiltering = true
+                    }
+                }
+
                 let results: [CNContact] = await withCheckedContinuation { cont in
                     DispatchQueue.global(qos: .userInitiated).async {
                         let filtered = allContacts.filteredClientContacts(
