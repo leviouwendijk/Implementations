@@ -7,184 +7,194 @@ import Structures
 
 @MainActor
 public class ContactsListViewModel: ObservableObject {
-    // @Published public var contacts: [CNContact] = []
-    // @Published public var searchQuery: String = ""
     @Published public var isLoading = false
     @Published public var errorMessage: String?
-    // @Published public var searchStrictness: SearchStrictness = .strict
 
     @Published public var contacts: [CNContact] = []
     @Published public var searchQuery: String = ""
     @Published public var searchStrictness: SearchStrictness = .strict 
 
-    // @Published public var contacts: [CNContact] = [] {
-    //     didSet { scheduleFilterIfNeeded() }
-    // }
-    // @Published public var searchQuery: String = "" {
-    //     didSet { scheduleFilterIfNeeded() }
-    // }
-    // @Published public var searchStrictness: SearchStrictness = .strict {
-    //     didSet { scheduleFilterIfNeeded() }
-    // }
-
-    // @Published public private(set) var filteredContacts: [CNContact] = []
     @Published public private(set) var filteredContacts: [CNContact] = []
 
     @Published public var isFuzzyFiltering = false
 
     @Published public var selectedContactId: String? = nil
-    // @Published public var scrollToFirstID: String? = nil
+    @Published public var scrollToFirstID: String? = nil
 
     private var pendingFilterWorkItem: DispatchWorkItem?
     private let debounceInterval: TimeInterval = 0.2
 
     private var debounceFilterTask: Task<Void, Never>? = nil
 
-    public init() {
-        Task { 
-            await loadAllContacts()
-        }
-        fuzzyFilterListener()
-    }
+    // public init() {
+    //     Task { 
+    //         await loadAllContacts()
+    //     }
+    //     fuzzyFilterListener()
+    // }
 
-    public func loadAllContacts() async {
-        // DispatchQueue.main.async {
-            self.isLoading = true
-            self.errorMessage = nil
-        // }
-        do {
-            let fetched = try await loadContacts()
-            // DispatchQueue.main.async {
-                print("[ContactsVM] assigning contacts (\(fetched.count) items)")
-                self.contacts = fetched
-                self.isLoading = false
-            // }
-        } catch {
-            // DispatchQueue.main.async {
-                self.errorMessage = error.localizedDescription
-                self.isLoading = false
-            // }
-        }
-        // isLoading = false
-    }
+    // public func loadAllContacts() async {
+    //     // DispatchQueue.main.async {
+    //         self.isLoading = true
+    //         self.errorMessage = nil
+    //     // }
+    //     do {
+    //         let fetched = try await loadContacts()
+    //         // DispatchQueue.main.async {
+    //             print("[ContactsVM] assigning contacts (\(fetched.count) items)")
+    //             self.contacts = fetched
+    //             self.isLoading = false
+    //         // }
+    //     } catch {
+    //         // DispatchQueue.main.async {
+    //             self.errorMessage = error.localizedDescription
+    //             self.isLoading = false
+    //         // }
+    //     }
+    //     // isLoading = false
+    // }
 
-    private var cancellables = Set<AnyCancellable>()
+    // private var cancellables = Set<AnyCancellable>()
 
-    public func fuzzyFilterListener() {
-        Publishers
-        .CombineLatest3($contacts, $searchQuery, $searchStrictness)
-        .drop { contacts, _, _ in contacts.isEmpty }
-        .removeDuplicates(by: { a, b in
-            return a.0.count == b.0.count
-            && a.1 == b.1
-            && a.2 == b.2
-        })
-        .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
-        .sink { [weak self] allContacts, query, strictness in
-            guard let self = self else { return }
+    // public func fuzzyFilterListener() {
+    //     Publishers
+    //     .CombineLatest3($contacts, $searchQuery, $searchStrictness)
+    //     .drop { contacts, _, _ in contacts.isEmpty }
+    //     .removeDuplicates(by: { a, b in
+    //         return a.0.count == b.0.count
+    //         && a.1 == b.1
+    //         && a.2 == b.2
+    //     })
+    //     .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
+    //     .sink { [weak self] allContacts, query, strictness in
+    //         guard let self = self else { return }
 
-            if !(self.isLoading) {
-                withAnimation(.easeInOut(duration: 0.25)) {
-                    self.isFuzzyFiltering = true
-                }
-            }
+    //         if !(self.isLoading) {
+    //             withAnimation(.easeInOut(duration: 0.25)) {
+    //                 self.isFuzzyFiltering = true
+    //             }
+    //         }
 
-            self.applyFuzzyFilter(
-                to: allContacts,
-                query: query,
-                tolerance: strictness.tolerance
-            )
-        }
-        .store(in: &cancellables)
-    }
+    //         self.applyFuzzyFilter(
+    //             to: allContacts,
+    //             query: query,
+    //             tolerance: strictness.tolerance
+    //         )
+    //     }
+    //     .store(in: &cancellables)
+    // }
 
-    public func applyFuzzyFilter(
-        to allContacts: [CNContact],
-        query: String,
-        tolerance: Int
-    ) {
-        let normalized = query.normalizedForClientDogSearch
+    // public func applyFuzzyFilter(
+    //     to allContacts: [CNContact],
+    //     query: String,
+    //     tolerance: Int
+    // ) {
+    //     let normalized = query.normalizedForClientDogSearch
 
-        DispatchQueue.global(qos: .userInitiated).async {
-            let results = allContacts
-            .filteredClientContacts(
-                matching: normalized,
-                fuzzyTolerance: tolerance
-            )
+    //     DispatchQueue.global(qos: .userInitiated).async {
+    //         let results = allContacts
+    //         .filteredClientContacts(
+    //             matching: normalized,
+    //             fuzzyTolerance: tolerance
+    //         )
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
-                withAnimation(.easeInOut(duration: 0.20)) {
-                    self.filteredContacts = results
-                    self.isFuzzyFiltering = false
-                }
-                // self.scrollToFirstID = results.first?.identifier
-            }
-        }
-    }
+    //         DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
+    //             withAnimation(.easeInOut(duration: 0.20)) {
+    //                 self.filteredContacts = results
+    //                 self.isFuzzyFiltering = false
+    //             }
+    //             // self.scrollToFirstID = results.first?.identifier
+    //         }
+    //     }
+    // }
 
     public func resetSelectedContact() {
         self.selectedContactId = nil
     }
 
-    // private func scheduleFilterIfNeeded() {
-    //     guard !contacts.isEmpty else {
-    //         return
-    //     }
 
-    //     debounceFilterTask?.cancel()
+    // NEW CONCURRENCY IMPLEMENTATION
 
-    //     let snapshotContacts   = self.contacts
-    //     let snapshotQuery      = self.searchQuery
-    //     let snapshotStrictness = self.searchStrictness
+    public init() {
+        Task { await loadAllContacts() }
+        startFiltering()
+    }
 
-    //     if !isLoading {
-    //         withAnimation(.easeInOut(duration: 0.25)) {
-    //             self.isFuzzyFiltering = true
-    //         }
-    //     }
+    public func loadAllContacts() async {
+        await MainActor.run {
+            self.isLoading = true
+            self.errorMessage = nil
+        }
+        do {
+            let all = try await withCheckedThrowingContinuation { cont in
+                DispatchQueue.global(qos: .userInitiated).async {
+                    do {
+                        let fetched = try fetchContacts()
+                        cont.resume(returning: fetched)
+                    } catch {
+                        cont.resume(throwing: error)
+                    }
+                }
+            }
+            await MainActor.run {
+                self.contacts = all
+                self.isLoading = false
+            }
+        } catch {
+            await MainActor.run {
+                self.errorMessage = error.localizedDescription
+                self.isLoading = false
+            }
+        }
+    }
 
-    //     debounceFilterTask = Task { [weak self] in
-    //         guard let self = self else { return }
+    private var filterTask: Task<Void, Never>?
 
-    //         try? await Task.sleep(nanoseconds: UInt64(self.debounceInterval * 1_000_000_000))
+    public func startFiltering() {
+        filterTask?.cancel()
+        filterTask = Task { [weak self] in
+            guard let self = self else { return }
 
-    //         guard !Task.isCancelled else { return }
+            let updates = Publishers
+                .CombineLatest3(self.$contacts, self.$searchQuery, self.$searchStrictness)
+                .drop { $0.0.isEmpty }
+                .removeDuplicates { a, b in
+                   a.0.count == b.0.count && a.1 == b.1 && a.2 == b.2
+                }
+                .debounce(
+                   for: .milliseconds(200),
+                   scheduler: DispatchQueue.global(qos: .userInitiated)
+                )
+                .values
 
-    //         let results = await self.filterContacts(
-    //             allContacts: snapshotContacts,
-    //             query:       snapshotQuery,
-    //             tolerance:   snapshotStrictness.tolerance
-    //         )
+            for await (allContacts, query, strictness) in updates {
+                if Task.isCancelled { break }
 
-    //         guard !Task.isCancelled else { return }
+                let results: [CNContact] = await withCheckedContinuation { cont in
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        let filtered = allContacts.filteredClientContacts(
+                            matching: query.normalizedForClientDogSearch,
+                            fuzzyTolerance: strictness.tolerance
+                        )
+                        cont.resume(returning: filtered)
+                    }
+                }
+                if Task.isCancelled { break }
 
-    //         self.filteredContacts = results
+                await Task.yield()
 
-    //         // let newFirstID = results.first?.identifier
-    //         DispatchQueue.main.async {
-    //             withAnimation(.easeInOut(duration: 0.20)) {
-    //                 self.isFuzzyFiltering = false
-    //             }
-    //             // self.scrollToFirstID = newFirstID
-    //         }
-    //     }
-    // }
+                await MainActor.run {
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        self.isFuzzyFiltering = false
+                        self.filteredContacts = results
+                    }
+                    self.scrollToFirstID = results.first?.identifier
+                }
+            }
+        }
+    }
 
-    // @Sendable
-    // private func filterContacts(
-    //     allContacts: [CNContact],
-    //     query: String,
-    //     tolerance: Int
-    // ) async -> [CNContact] {
-    //     return await withCheckedContinuation { continuation in
-    //         DispatchQueue.global(qos: .userInitiated).async {
-    //             let normalized = query.normalizedForClientDogSearch
-    //             let results = allContacts.filteredClientContacts(
-    //                 matching: normalized,
-    //                 fuzzyTolerance: tolerance
-    //             )
-    //             continuation.resume(returning: results)
-    //         }
-    //     }
-    // }
+    deinit {
+        filterTask?.cancel()
+    }
 }
