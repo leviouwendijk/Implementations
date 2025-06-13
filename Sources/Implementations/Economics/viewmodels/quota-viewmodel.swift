@@ -16,6 +16,10 @@ public class QuotaViewModel: ObservableObject {
 
     @Published public var selectedTier: QuotaTierType? = nil
 
+    public var selectedTierIsNil: Bool {
+        return (self.selectedTier == nil)
+    }
+
     private var cancellables = Set<AnyCancellable>()
 
     // private var debounceQuotaTask: Task<Void, Never>? = nil
