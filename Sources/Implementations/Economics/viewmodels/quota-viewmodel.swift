@@ -14,7 +14,7 @@ public class QuotaViewModel: ObservableObject {
 
     @Published public var tiers: [QuotaTierContent]? = nil
 
-    @Published public var selectedTier: QuotaTierType = .combined
+    @Published public var selectedTier: QuotaTierType? = nil
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -169,9 +169,11 @@ public class QuotaViewModel: ObservableObject {
             str.append("\n")
         }
 
-        let inputs = length == .short ? try quota.shortInputs(for: selectedTier) : quota.inputs()
+        if let selectedTier = selectedTier {
+            let inputs = (length == .short) ? try quota.shortInputs(for: selectedTier) : quota.inputs()
+            str.append(inputs)
+        }
 
-        str.append(inputs)
         return str
     }
 }
