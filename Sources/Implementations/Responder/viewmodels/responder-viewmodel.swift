@@ -47,6 +47,10 @@ public class ResponderViewModel: ObservableObject {
     @Published public var contacts: [CNContact] = []
     @Published public var selectedContact: CNContact?
 
+    public var noContactSelectedButIsRequired: Bool {
+        return (selectedContact == nil && apiPathVm.requiresSelectedContact)
+    }
+
     @Published public var showSuccessBanner = false
     @Published public var successBannerMessage = ""
 
@@ -64,8 +68,6 @@ public class ResponderViewModel: ObservableObject {
     @Published public var includeQuoteInCustomMessage = false
 
     @Published public var selectedWAMessage: WAMessageTemplate = .called
-
-
 
 
     // ADDING DATE PICKER 

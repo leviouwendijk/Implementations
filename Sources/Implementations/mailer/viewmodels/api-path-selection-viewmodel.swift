@@ -74,4 +74,11 @@ public class MailerAPISelectionViewModel: ObservableObject {
     public var routeOrEndpointIsNil: Bool {
         return (selectedRoute == nil || selectedEndpoint == nil)
     }
+
+    public var requiresSelectedContact: Bool {
+        guard !(selectedRoute == .template) else {
+            return false
+        }
+        return true
+    }
 }
