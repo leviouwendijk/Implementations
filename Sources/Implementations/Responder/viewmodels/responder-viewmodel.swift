@@ -47,9 +47,13 @@ public class ResponderViewModel: ObservableObject {
     @Published public var contacts: [CNContact] = []
     @Published public var selectedContact: CNContact?
 
-    public var noContactSelectedButIsRequired: Bool {
-        return (selectedContact == nil && apiPathVm.requiresSelectedContact)
-    }
+    // public var noContactSelectedButIsRequired: Bool {
+    //     return (selectedContact == nil && apiPathVm.requiresSelectedContact)
+    // }
+
+    // public var noContactButIsRequiredAndEmailEmpty: Bool {
+    //     return (selectedContact == nil && apiPathVm.requiresSelectedContact)
+    // }
 
     @Published public var showSuccessBanner = false
     @Published public var successBannerMessage = ""
