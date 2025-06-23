@@ -78,7 +78,7 @@ public class IncomeAllocatorAccountsViewModel: ObservableObject {
         }
 
         allocationResults = summary.entries.map { entry in
-            return "\(entry.allocation.account.rawValue): \(entry.result.display())"
+            return "\(entry.allocation.account.rawValue) (\(entry.allocation.percentage?.display() ?? "") %): \(entry.result.display())"
         }
     }
 
