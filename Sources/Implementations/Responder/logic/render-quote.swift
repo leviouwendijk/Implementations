@@ -3,12 +3,6 @@ import plate
 import Economics
 import Interfaces
 
-public func prepareEnvironment() throws {
-    let env = DefaultEnvironmentVariables.string()
-    let vars = try ApplicationEnvironmentLoader.load(from: env)
-    ApplicationEnvironmentLoader.set(to: vars)
-}
-
 // good generic render implementation, but unused for particular tier selection export
 // func render(quota: CustomQuota) throws {
 //     try prepareEnvironment()
@@ -63,17 +57,4 @@ public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws {
     print("out:", outputPath)
 
     try pdf(template: templatePath, destination: outputPath, replacements: repls)
-}
-
-public func pdf(
-    template: String,
-    destination: String,
-    replacements: [StringTemplateReplacement]
-) throws {
-    // let htmlRaw = try LoadableResource(name: template, fileExtension: "html").content()
-    let htmlRaw = try ResourceLoader.contents(at: template)
-    let converter = StringTemplateConverter(text: htmlRaw, replacements: replacements)
-    let html = converter.replace()
-    try html.weasyPDF(destination: destination)
-    try copyFileObjectToClipboard(path: destination)
 }

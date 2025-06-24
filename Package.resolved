@@ -1,6 +1,15 @@
 {
-  "originHash" : "00136ac1c40f117295462c960b78e0b1ced8bd98d9dcf3669da841309e27fb0e",
+  "originHash" : "dbe854365e864eac245e1199866676772cb0b6317503ead310dc143942250ae7",
   "pins" : [
+    {
+      "identity" : "commerce",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Commerce.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "a6186b6938ae756c255bd17433792cd97b059dfe"
+      }
+    },
     {
       "identity" : "economics",
       "kind" : "remoteSourceControl",
@@ -11,12 +20,21 @@
       }
     },
     {
+      "identity" : "extensions",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Extensions.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "4e56561722a4d135d9600db2963b1d39d7099b2c"
+      }
+    },
+    {
       "identity" : "interfaces",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/leviouwendijk/Interfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "d21913ed6dfb22a87330f21d65962b51db62966a"
+        "revision" : "77d3e18980896157a8d9622490f26adb2487a0d3"
       }
     },
     {
@@ -25,7 +43,7 @@
       "location" : "https://github.com/leviouwendijk/plate.git",
       "state" : {
         "branch" : "master",
-        "revision" : "3b25a00ac0ba239c86c3af48d4894dd2f2dd7f42"
+        "revision" : "bf2f9ab555ba997fa7720a12dd93526ee8ec5950"
       }
     },
     {
@@ -34,7 +52,7 @@
       "location" : "https://github.com/leviouwendijk/Structures.git",
       "state" : {
         "branch" : "master",
-        "revision" : "746c7cf1c02968dd5dc348ccc175186aa69f8d8a"
+        "revision" : "3cd74423f218095c22dff13f3569481e809434c5"
       }
     }
   ],
