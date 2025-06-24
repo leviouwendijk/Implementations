@@ -5,7 +5,7 @@ import Commerce
 import Structures
 import Interfaces
 
-public func renderInvoice(_ invoice: InvoiceData) throws {
+public func renderInvoice(_ invoice: InvoiceData, replaceEmpties: Bool = false) throws {
     try prepareEnvironment()
 
     var repls: [StringTemplateReplacement] = invoice.replacements()
@@ -19,5 +19,5 @@ public func renderInvoice(_ invoice: InvoiceData) throws {
     let outputPath = "\(Home.string())/myworkdir/pdf_output/factuur.pdf"
     print("out:", outputPath)
 
-    try pdf(template: templatePath, destination: outputPath, replacements: repls)
+    try pdf(template: templatePath, destination: outputPath, replacements: repls, replaceEmpties: replaceEmpties)
 }
