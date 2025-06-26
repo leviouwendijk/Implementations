@@ -5,17 +5,22 @@ import Commerce
 import Structures
 import Interfaces
 
-public func renderInvoice(_ invoice: InvoiceData, replaceEmpties: Bool = false) throws {
+public func renderInvoice(
+    _ invoice: InvoiceData,
+    replaceEmpties: Bool = false,
+    logo: ResourcesEnvironmentKey = .h_logo,
+    template: ResourcesEnvironmentKey = .invoice_template
+) throws {
     try prepareEnvironment()
 
     var repls: [StringTemplateReplacement] = invoice.replacements()
 
     // let logoPath = try LoadableResource(name: "logo", fileExtension: "png").path()
-    let logoPath = try ResourcesEnvironment.require(.h_logo)
+    let logoPath = try ResourcesEnvironment.require(logo)
     let logoRepl = StringTemplateReplacement(placeholders: ["logo_path"], replacement: logoPath, initializer: .auto)
     repls.append(logoRepl)
 
-    let templatePath = try ResourcesEnvironment.require(.invoice_template)
+    let templatePath = try ResourcesEnvironment.require(template)
     let outputPath = "\(Home.string())/myworkdir/pdf_output/factuur.pdf"
     print("out:", outputPath)
 
