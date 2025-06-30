@@ -7,7 +7,7 @@
       "location" : "https://github.com/leviouwendijk/Commerce.git",
       "state" : {
         "branch" : "master",
-        "revision" : "d01ddf153374cd7f174f8d31246e33192ae4becf"
+        "revision" : "12704bacb68690e7cce2e94b2ae7019136956baa"
       }
     },
     {
@@ -34,7 +34,7 @@
       "location" : "https://github.com/leviouwendijk/Interfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "c4aca8584c957859f5cd1e712462fd6f6abe6dab"
+        "revision" : "89ae6cb1ad26b4074dc3570c73deb3a5027e8e2b"
       }
     },
     {
