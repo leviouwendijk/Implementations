@@ -5,7 +5,7 @@ import Commerce
 import Structures
 import Interfaces
 
-public func renderCertificate(
+public func renderCertification(
     _ certification: CertificationData,
     replaceEmpties: Bool = false,
     logo: ResourcesEnvironmentKey = .h_logo,
