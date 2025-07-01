@@ -16,3 +16,4 @@ public func pdf(
     try html.weasyPDF(destination: destination)
     try copyFileObjectToClipboard(path: destination)
 }
+
