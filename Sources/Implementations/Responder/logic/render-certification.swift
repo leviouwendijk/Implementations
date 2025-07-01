@@ -20,6 +20,10 @@ public func renderCertification(
     let logoRepl = StringTemplateReplacement(placeholders: ["logo_path"], replacement: logoPath, initializer: .auto)
     repls.append(logoRepl)
 
+    let signaturePath = try ResourcesEnvironment.require(.levi_signature)
+    let signatureRepl = StringTemplateReplacement(placeholders: ["signature_path"], replacement: signaturePath, initializer: .auto)
+    repls.append(signatureRepl)
+
     let templatePath = try ResourcesEnvironment.require(template)
     let outputPath = "\(Home.string())/myworkdir/pdf_output/certification.pdf"
     print("out:", outputPath)

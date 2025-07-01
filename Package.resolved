@@ -7,7 +7,7 @@
       "location" : "https://github.com/leviouwendijk/Commerce.git",
       "state" : {
         "branch" : "master",
-        "revision" : "12704bacb68690e7cce2e94b2ae7019136956baa"
+        "revision" : "c248985c20fa05e6ed3d928b8bd12f11677a2ff0"
       }
     },
     {
@@ -34,7 +34,7 @@
       "location" : "https://github.com/leviouwendijk/Interfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "89ae6cb1ad26b4074dc3570c73deb3a5027e8e2b"
+        "revision" : "3b50738ddf49901dc608d7d895ca3fa694516387"
       }
     },
     {
@@ -43,7 +43,7 @@
       "location" : "https://github.com/leviouwendijk/plate.git",
       "state" : {
         "branch" : "master",
-        "revision" : "ca9691c1f14f5221558e473ea98c5b3dd984a488"
+        "revision" : "995d675161b8216c866638fa940b737eab3594db"
       }
     },
     {
