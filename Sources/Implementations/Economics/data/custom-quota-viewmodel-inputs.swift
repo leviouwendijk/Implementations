@@ -1,5 +1,7 @@
 import Foundation
 import Economics
+import Structures
+import plate
 
 public enum InputConversionError: Error, Sendable {
     case invalidNumber(String)
@@ -106,19 +108,52 @@ public struct SessionCountEstimationInputs: Sendable {
     }
 }
 
+public struct ExpirationSettingInputs: Sendable {
+    public var start: Date
+    public var unit: DateDistanceUnit
+    public let interval: String
+    
+    public init(
+        start: Date = Date(),
+        unit: DateDistanceUnit = .weeks,
+        interval: String = "4"
+    ) {
+        self.start = start
+        self.unit = unit
+        self.interval = interval
+    }
+
+    public func range() throws -> ExpirationDateRange {
+        guard let count = Int(interval) else {
+            throw InputConversionError.invalidNumber("‘\(interval)’ is not a number")
+        }
+
+        let comps = try unit.components(count: count)
+        let end = start + comps
+        return ExpirationDateRange(start: start, end: end)
+    }
+
+    public func expirationSetting() throws -> ExpirationSetting {
+        let range = try range()
+        return ExpirationSetting(using: range)
+    }
+}
+
 public struct CustomQuotaInputs: Sendable {
     public var base: String
     public var prognosis: SessionCountEstimationInputs
     public var suggestion: SessionCountEstimationInputs
     public var singular: SessionCountEstimationInputs
     public var travelCost: TravelCostInputs
+    public var expiration: ExpirationSettingInputs
 
     public init(
         base: String,
         prognosis: SessionCountEstimationInputs,
         suggestion: SessionCountEstimationInputs,
         singular: SessionCountEstimationInputs,
-        travelCost: TravelCostInputs
+        travelCost: TravelCostInputs,
+        expiration: ExpirationSettingInputs
     )
     {
         self.base = base
@@ -126,6 +161,7 @@ public struct CustomQuotaInputs: Sendable {
         self.suggestion = suggestion
         self.singular = singular
         self.travelCost = travelCost
+        self.expiration = expiration
     }
 
     public func customQuotaEstimation() throws -> CustomQuota {
@@ -137,13 +173,15 @@ public struct CustomQuotaInputs: Sendable {
         let sugg = try suggestion.sessionCountEstimation()
         let sing = try singular.sessionCountEstimation()
         let trav = try travelCost.travelCost()
+        let exp = try expiration.expirationSetting()
 
         return try CustomQuota(
             base: ba,
             travelCost: trav,
             prognosis: prog,
             suggestion: sugg,
-            singular: sing
+            singular: sing,
+            expiration: exp
         )
     }
 }

@@ -48,6 +48,11 @@ public class QuotaViewModel: ObservableObject {
                     time: "80"
                 ),
                 roundTrip: true
+            ),
+            expiration: ExpirationSettingInputs(
+                start: Date(),
+                unit: .weeks,
+                interval: "4"
             )
         )
     
