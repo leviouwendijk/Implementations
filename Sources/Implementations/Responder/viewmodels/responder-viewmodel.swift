@@ -41,7 +41,7 @@ public class ResponderViewModel: ObservableObject {
     @Published public var number: String?
     @Published public var local = false
     @Published public var localLocation = "Alkmaar"
-    @Published public var localStreet = "Prins Hendrikstraat"
+    @Published public var localStreet = "Alkmaarderhout"
 
     @Published public var searchQuery = ""
     @Published public var contacts: [CNContact] = []
