@@ -71,8 +71,7 @@ public class ResponderViewModel: ObservableObject {
 
     @Published public var includeQuoteInCustomMessage = false
 
-    @Published public var selectedWAMessage: WAMessageTemplate = .called
-
+    @Published public var selectedWAMessage: WAMessageTemplate = .calledVariationI
 
     // ADDING DATE PICKER 
     @Published public var appointmentsQueue: [MailerAPIAppointmentContent] = [] 
