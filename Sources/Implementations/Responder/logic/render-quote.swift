@@ -47,6 +47,9 @@ public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws {
     let kmCode = quota.kilometerCodeReplacement(for: tier)
     repls.append(contentsOf: kmCode)
 
+    let expiration = quota.expirationReplacements()
+    repls.append(contentsOf: expiration)
+
     // let logoPath = try LoadableResource(name: "logo", fileExtension: "png").path()
     let logoPath = try ResourcesEnvironment.require(.h_logo)
     let logoRepl = StringTemplateReplacement(placeholders: ["logo_path"], replacement: logoPath, initializer: .auto)
