@@ -6,7 +6,7 @@ import Structures
 @MainActor
 public class QuotaInputsViewModel: ObservableObject {
     @Published public var customQuotaInputs: CustomQuotaInputs
- 
+    @Published public var inputsChanged: Bool = false
     @Published public var activateRender: Bool = false
 
     private var cancellables = Set<AnyCancellable>()
@@ -41,6 +41,10 @@ public class QuotaInputsViewModel: ObservableObject {
                 interval: "4"
             )
         )
+
+        $customQuotaInputs
+            .sink { [weak self] _ in self?.inputsChanged = true }
+            .store(in: &cancellables)
     
         $customQuotaInputs
             .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)

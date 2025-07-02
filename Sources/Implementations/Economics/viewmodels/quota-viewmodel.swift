@@ -18,8 +18,6 @@ public class QuotaViewModel: ObservableObject {
 
     @Published public var selectedTier: QuotaTierType? = nil
 
-    @Published public var inputsChanged: Bool = false
-
     public var selectedTierIsNil: Bool {
         return (self.selectedTier == nil)
     }
@@ -97,7 +95,6 @@ public class QuotaViewModel: ObservableObject {
             .sink { [weak self] inputs in
                 guard let self = self else { return }
 
-                self.inputsChanged = true
                 self.isLoading = true
                 // self.loadedQuota = nil
                 self.inputsVm.activateRender = false
@@ -111,7 +108,7 @@ public class QuotaViewModel: ObservableObject {
                             self.loadedQuota = q
                             self.isLoading = false
                             self.errorMessage = ""
-                            self.inputsChanged  = false
+                            self.inputsVm.inputsChanged  = false
                         }
                     } catch {
                         DispatchQueue.main.async {
