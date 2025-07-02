@@ -113,10 +113,14 @@ public struct ExpirationSettingInputs: Sendable {
     public var unit: DateDistanceUnit
     public var interval: String
     
+    public var result: ExpirationSetting? {
+        return try? expirationSetting()
+    }
+    
     public init(
         start: Date = Date(),
         unit: DateDistanceUnit = .weeks,
-        interval: String = "4"
+        interval: String = "4",
     ) {
         self.start = start
         self.unit = unit
