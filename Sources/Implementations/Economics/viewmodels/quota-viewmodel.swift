@@ -91,6 +91,7 @@ public class QuotaViewModel: ObservableObject {
         //     .store(in: &cancellables)
 
         inputsVm.$activateRender
+            .filter { $0 } // only to 'true' events
             .debounce(for: .milliseconds(200), scheduler: DispatchQueue.global(qos: .userInteractive))
             .receive(on: DispatchQueue.main)
             .sink { [weak self] inputs in
