@@ -91,7 +91,7 @@ public class QuotaViewModel: ObservableObject {
         //     .store(in: &cancellables)
 
         inputsVm.$activateRender
-            .filter { $0 } // only to 'true' events
+            .filter { $0 }
             .debounce(for: .milliseconds(200), scheduler: DispatchQueue.global(qos: .userInteractive))
             .receive(on: DispatchQueue.main)
             .sink { [weak self] inputs in
@@ -99,7 +99,7 @@ public class QuotaViewModel: ObservableObject {
 
                 // self.inputsChanged = true
                 self.isLoading = true
-                self.loadedQuota = nil
+                // self.loadedQuota = nil
                 self.inputsVm.activateRender = false
 
                 let inputs = self.inputsVm.makeCustomInputs()
