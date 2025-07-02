@@ -5,7 +5,9 @@ import Structures
 
 @MainActor
 public class QuotaViewModel: ObservableObject {
-    @Published public var customQuotaInputs: CustomQuotaInputs
+    // @Published public var customQuotaInputs: CustomQuotaInputs
+
+    @Published public var inputsVm: QuotaInputsViewModel = QuotaInputsViewModel()
  
     @Published public private(set) var loadedQuota: CustomQuota? = nil
     @Published public private(set) var isLoading: Bool = false
@@ -28,45 +30,78 @@ public class QuotaViewModel: ObservableObject {
     // private let debounceInterval: TimeInterval = 0.2
     
     public init() {
-        self.customQuotaInputs = CustomQuotaInputs(
-            base: "360",
-            prognosis: SessionCountEstimationInputs(
-                count: "5",
-                local: "4"
-            ),
-            suggestion: SessionCountEstimationInputs(
-                count: "3",
-                local: "2"
-            ),
-            singular: SessionCountEstimationInputs(
-                count: "1",
-                local: "0"
-            ),
-            travelCost: TravelCostInputs(
-                kilometers: "",
-                speed: "80.0",
-                rates: TravelCostRatesInputs(
-                    travel: "0.25", 
-                    time: "80"
-                ),
-                roundTrip: true
-            ),
-            expiration: ExpirationSettingInputs(
-                start: Date(),
-                unit: .weeks,
-                interval: "4"
-            )
-        )
+        // self.customQuotaInputs = CustomQuotaInputs(
+        //     base: "360",
+        //     prognosis: SessionCountEstimationInputs(
+        //         count: "5",
+        //         local: "4"
+        //     ),
+        //     suggestion: SessionCountEstimationInputs(
+        //         count: "3",
+        //         local: "2"
+        //     ),
+        //     singular: SessionCountEstimationInputs(
+        //         count: "1",
+        //         local: "0"
+        //     ),
+        //     travelCost: TravelCostInputs(
+        //         kilometers: "",
+        //         speed: "80.0",
+        //         rates: TravelCostRatesInputs(
+        //             travel: "0.25", 
+        //             time: "80"
+        //         ),
+        //         roundTrip: true
+        //     ),
+        //     expiration: ExpirationSettingInputs(
+        //         start: Date(),
+        //         unit: .weeks,
+        //         interval: "4"
+        //     )
+        // )
     
-        $customQuotaInputs
+        // $customQuotaInputs
+        //     .debounce(for: .milliseconds(200), scheduler: DispatchQueue.global(qos: .userInteractive))
+        //     .receive(on: DispatchQueue.main)
+        //     .sink { [weak self] inputs in
+        //         guard let self = self else { return }
+
+        //         // self.inputsChanged = true
+        //         self.isLoading = true
+        //         self.loadedQuota = nil
+
+        //         DispatchQueue.global(qos: .userInitiated).async {
+        //             do {
+        //                 let q = try inputs.customQuotaEstimation()
+        //                 DispatchQueue.main.async {
+        //                     self.loadedQuota = q
+        //                     self.isLoading = false
+        //                     self.errorMessage = ""
+        //                     self.inputsChanged  = false
+        //                 }
+        //             } catch {
+        //                 DispatchQueue.main.async {
+        //                     self.loadedQuota = nil
+        //                     self.isLoading = false
+        //                     self.errorMessage = error.localizedDescription
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     .store(in: &cancellables)
+
+        inputsVm.$activateRender
             .debounce(for: .milliseconds(200), scheduler: DispatchQueue.global(qos: .userInteractive))
             .receive(on: DispatchQueue.main)
             .sink { [weak self] inputs in
                 guard let self = self else { return }
 
-                self.inputsChanged = true
+                // self.inputsChanged = true
                 self.isLoading = true
-                // self.loadedQuota = nil
+                self.loadedQuota = nil
+                self.inputsVm.activateRender = false
+
+                let inputs = self.inputsVm.makeCustomInputs()
 
                 DispatchQueue.global(qos: .userInitiated).async {
                     do {
@@ -75,7 +110,7 @@ public class QuotaViewModel: ObservableObject {
                             self.loadedQuota = q
                             self.isLoading = false
                             self.errorMessage = ""
-                            self.inputsChanged  = false
+                            // self.inputsChanged  = false
                         }
                     } catch {
                         DispatchQueue.main.async {
@@ -127,7 +162,7 @@ public class QuotaViewModel: ObservableObject {
     // }
 
     public var hasEmptyInputs: Bool {
-        let inputs = customQuotaInputs
+        let inputs = inputsVm.customQuotaInputs
 
         if inputs.base.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return true
