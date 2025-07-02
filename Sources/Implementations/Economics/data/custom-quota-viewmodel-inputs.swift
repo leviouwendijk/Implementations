@@ -111,7 +111,7 @@ public struct SessionCountEstimationInputs: Sendable {
 public struct ExpirationSettingInputs: Sendable {
     public var start: Date
     public var unit: DateDistanceUnit
-    public let interval: String
+    public var interval: String
     
     public init(
         start: Date = Date(),
