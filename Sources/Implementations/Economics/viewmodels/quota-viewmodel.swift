@@ -97,7 +97,7 @@ public class QuotaViewModel: ObservableObject {
             .sink { [weak self] inputs in
                 guard let self = self else { return }
 
-                // self.inputsChanged = true
+                self.inputsChanged = true
                 self.isLoading = true
                 // self.loadedQuota = nil
                 self.inputsVm.activateRender = false
@@ -111,7 +111,7 @@ public class QuotaViewModel: ObservableObject {
                             self.loadedQuota = q
                             self.isLoading = false
                             self.errorMessage = ""
-                            // self.inputsChanged  = false
+                            self.inputsChanged  = false
                         }
                     } catch {
                         DispatchQueue.main.async {
