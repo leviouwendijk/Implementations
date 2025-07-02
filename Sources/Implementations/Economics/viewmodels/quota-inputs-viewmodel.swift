@@ -47,7 +47,7 @@ public class QuotaInputsViewModel: ObservableObject {
             .store(in: &cancellables)
     
         $customQuotaInputs
-            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
             .sink { [weak self] _ in self?.activateRender = true }
             .store(in: &cancellables)
     }
