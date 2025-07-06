@@ -90,4 +90,8 @@ public class TaskListViewModel: ObservableObject {
             ? rem.formattedDuration
             : "Overdue"
     }
+
+    public func isOverdue(_ task: TaskItem) -> Bool {
+        task.deadline < now
+    }
 }
