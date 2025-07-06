@@ -1,15 +1,26 @@
 import Foundation
 import Structures
 import Combine
+import Extensions
 
 public class TaskListViewModel: ObservableObject {
     @Published public var tasks: [TaskItem] = []
     @Published public var projects: [TaskProject] = []
     @Published public var sortOption: TaskSortOption = .dateCreatedDesc
 
+    private var timerCancellable: AnyCancellable?
+    @Published public var now: Date = Date()
+
     public init(tasks: [TaskItem] = [], projects: [TaskProject] = []) {
         self.tasks    = tasks
         self.projects = projects
+
+        timerCancellable = Timer
+            .publish(every: 60, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] date in
+                self?.now = date
+            }
     }
 
     public var sortedTaskItems: [TaskItem] {
@@ -67,5 +78,16 @@ public class TaskListViewModel: ObservableObject {
         var mod = tasks[idx]
         mutation(&mod)
         tasks[idx] = mod
+    }
+
+    public func timeOpen(for task: TaskItem) -> String {
+        now.timeIntervalSince(task.dateCreated).formattedDuration
+    }
+
+    public func timeLeft(for task: TaskItem) -> String {
+        let rem = task.deadline.timeIntervalSince(now)
+        return rem > 0
+            ? rem.formattedDuration
+            : "Overdue"
     }
 }
