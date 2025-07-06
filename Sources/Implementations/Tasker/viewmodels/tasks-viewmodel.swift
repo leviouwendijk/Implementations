@@ -6,7 +6,7 @@ import Extensions
 public class TaskListViewModel: ObservableObject {
     @Published public var tasks: [TaskItem] = []
     @Published public var projects: [TaskProject] = []
-    @Published public var sortOption: TaskSortOption = .dateCreatedDesc
+    @Published public var sortOption: TaskSortOption = .urgencyThenImportance
 
     private var timerCancellable: AnyCancellable?
     @Published public var now: Date = Date()
@@ -26,14 +26,29 @@ public class TaskListViewModel: ObservableObject {
     public var sortedTaskItems: [TaskItem] {
         tasks.sorted { a, b in
             switch sortOption {
-            case .urgencyDesc:      return a.urgency    > b.urgency
-            case .urgencyAsc:       return a.urgency    < b.urgency
-            case .importanceDesc:   return a.importance > b.importance
-            case .importanceAsc:    return a.importance < b.importance
-            case .dateCreatedDesc:  return a.dateCreated > b.dateCreated
-            case .dateCreatedAsc:   return a.dateCreated < b.dateCreated
-            case .deadlineDesc:     return a.deadline    > b.deadline
-            case .deadlineAsc:      return a.deadline    < b.deadline
+                case .urgencyDesc:      return a.urgency    > b.urgency
+                case .urgencyAsc:       return a.urgency    < b.urgency
+                case .importanceDesc:   return a.importance > b.importance
+                case .importanceAsc:    return a.importance < b.importance
+
+                case .urgencyThenImportance:
+                    if a.urgency != b.urgency {
+                        return a.urgency > b.urgency
+                    } else {
+                        return a.importance > b.importance
+                    }
+
+                case .importanceThenUrgency:
+                    if a.importance != b.importance {
+                        return a.importance > b.importance
+                    } else {
+                        return a.urgency > b.urgency
+                    }
+
+                case .dateCreatedDesc:  return a.dateCreated > b.dateCreated
+                case .dateCreatedAsc:   return a.dateCreated < b.dateCreated
+                case .deadlineDesc:     return a.deadline    > b.deadline
+                case .deadlineAsc:      return a.deadline    < b.deadline
             }
         }
     }
