@@ -63,6 +63,10 @@ public class TaskListViewModel: ObservableObject {
         tasks.removeAll { toRemove.contains($0.id) }
     }
 
+    public func addProject(_ project: TaskProject) {
+        projects.append(project)
+    }
+
     public func toggleCompletion(of task: TaskItem) {
         update(task) { $0.completion.toggle() }
     }
