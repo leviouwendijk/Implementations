@@ -57,6 +57,10 @@ public class TaskListViewModel: ObservableObject {
         tasks.append(task)
     }
 
+    public func delete(_ task: TaskItem) {
+        tasks.removeAll { $0.id == task.id }
+    }
+
     public func remove(at offsets: IndexSet) {
         let all       = sortedTaskItems
         let toRemove  = offsets.map { all[$0].id }
