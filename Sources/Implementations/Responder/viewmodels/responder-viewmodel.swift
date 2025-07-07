@@ -261,18 +261,18 @@ public class ResponderViewModel: ObservableObject {
     public var selectedWAMessageReplaced: String {
         // return selectedWAMessage.replaced(client: client, dog: dog)
 
-        let raw = selectedWAMessage.message
-        print("🔍 raw template: \(raw)")
-        print("🔍 client=“\(client)” (length \(client.count))")
-        print("🔍 dog   =“\(dog)”   (length \(dog.count))")
+        // let raw = selectedWAMessage.message
+        // print("🔍 raw template: \(raw)")
+        // print("🔍 client=“\(client)” (length \(client.count))")
+        // print("🔍 dog   =“\(dog)”   (length \(dog.count))")
 
-        let rep = selectedWAMessage
-        .message
-        .convertingReplacements(
-            replacements: WAMessageReplacements()
-        )
+        // let rep = selectedWAMessage
+        // .message
+        // .convertingReplacements(
+        //     replacements: WAMessageReplacements()
+        // )
 
-        print("repl.: ", "\n", rep)
+        // print("repl.: ", "\n", rep)
 
         return selectedWAMessage
         .message
