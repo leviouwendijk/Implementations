@@ -203,4 +203,8 @@ public class ContactsListViewModel: ObservableObject {
     deinit {
         filterTask?.cancel()
     }
+
+    public func reloadContacts() {
+        Task { await loadAllContacts() }
+    }
 }
