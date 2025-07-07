@@ -268,8 +268,11 @@ public class ResponderViewModel: ObservableObject {
     }
 
     public var waMessageContainsRawPlaceholders: Bool {
+        let syntax = PlaceholderSyntax(prepending: "{", appending: "}", repeating: 1)
         return selectedWAMessageReplaced
-            .containsRawTemplatePlaceholderSyntaxes()
+        .containsRawTemplatePlaceholderSyntaxes(
+            placeholderSyntaxes: [syntax]
+        )
     }
 
     public var emptySubjectWarning: Bool {
