@@ -491,26 +491,31 @@ public class ResponderViewModel: ObservableObject {
             StringTemplateReplacement(
                 placeholders: ["client", "name"],
                 replacement: self.client,
+                initializer: .auto,
                 placeholderSyntax: syntax
             ),
             StringTemplateReplacement(
                 placeholders: ["dog"],
                 replacement: self.dog,
+                initializer: .auto,
                 placeholderSyntax: syntax
             ),
             StringTemplateReplacement(
                 placeholders: ["deliverable"],
                 replacement: self.agreementDeliverable.name,
+                initializer: .auto,
                 placeholderSyntax: syntax
             ),
             StringTemplateReplacement(
                 placeholders: ["detail"],
                 replacement: self.agreementDeliverable.sessions.str,
+                initializer: .auto,
                 placeholderSyntax: syntax
             ),
             StringTemplateReplacement(
                 placeholders: ["price"],
                 replacement: self.agreementDeliverable.price.display(),
+                initializer: .auto,
                 placeholderSyntax: syntax
             ),
         ]
