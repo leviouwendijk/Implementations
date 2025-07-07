@@ -48,6 +48,28 @@ public class ResponderViewModel: ObservableObject {
     @Published public var contacts: [CNContact] = []
     @Published public var selectedContact: CNContact?
 
+    @Published public var deliverable = ""
+    @Published public var sessions = ""
+    @Published public var fromMinutes = ""
+    @Published public var toMinutes = ""
+    @Published public var price = ""
+
+    public var agreementDeliverable: AgreementDeliverable {
+        let overrideDuration: Bool = (!fromMinutes.isEmpty && !toMinutes.isEmpty)
+        let from = Int(fromMinutes) ?? 0
+        let to = Int(toMinutes) ?? 0
+        let duration = overrideDuration ? AgreementDeliverableSessionDurationRange(fromMinutes: from, toMinutes: to) : AgreementDeliverableSessionDurationRange()
+
+        return AgreementDeliverable(
+            name: deliverable,
+            sessions: AgreementDeliverableSessions(
+                count: Int(sessions) ?? 0,
+                duration: duration
+            ),
+            price: Double(price) ?? 0.0
+        )
+    }
+
     // public var noContactSelectedButIsRequired: Bool {
     //     return (selectedContact == nil && apiPathVm.requiresSelectedContact)
     // }
@@ -237,7 +259,12 @@ public class ResponderViewModel: ObservableObject {
     }
 
     public var selectedWAMessageReplaced: String {
-        return selectedWAMessage.replaced(client: client, dog: dog)
+        // return selectedWAMessage.replaced(client: client, dog: dog)
+        return selectedWAMessage
+        .rawValue
+        .convertingReplacements(
+            replacements: WAMessageReplacements()
+        )
     }
 
     public var waMessageContainsRawPlaceholders: Bool {
@@ -438,5 +465,37 @@ public class ResponderViewModel: ObservableObject {
         street = ""
         number = ""
         selectedContact = nil
+    }
+
+    public func WAMessageReplacements() -> [StringTemplateReplacement] {
+        let syntax = PlaceholderSyntax(prepending: "{", appending: "}", repeating: 1)
+
+        return [
+            StringTemplateReplacement(
+                placeholders: ["client", "name"],
+                replacement: self.client,
+                placeholderSyntax: syntax
+            ),
+            StringTemplateReplacement(
+                placeholders: ["dog"],
+                replacement: self.dog,
+                placeholderSyntax: syntax
+            ),
+            StringTemplateReplacement(
+                placeholders: ["deliverable"],
+                replacement: self.agreementDeliverable.name,
+                placeholderSyntax: syntax
+            ),
+            StringTemplateReplacement(
+                placeholders: ["detail"],
+                replacement: self.agreementDeliverable.sessions.str,
+                placeholderSyntax: syntax
+            ),
+            StringTemplateReplacement(
+                placeholders: ["price"],
+                replacement: self.agreementDeliverable.price.display(),
+                placeholderSyntax: syntax
+            ),
+        ]
     }
 }
