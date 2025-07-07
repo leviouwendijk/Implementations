@@ -266,6 +266,13 @@ public class ResponderViewModel: ObservableObject {
         print("🔍 client=“\(client)” (length \(client.count))")
         print("🔍 dog   =“\(dog)”   (length \(dog.count))")
 
+        let rep = selectedWAMessage
+        .message
+        .convertingReplacements(
+            replacements: WAMessageReplacements()
+        )
+
+        print("repl.: ", "\n", rep)
 
         return selectedWAMessage
         .message
