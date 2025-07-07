@@ -5,11 +5,14 @@ import Structures
 
 public enum ResponderViewModelError: LocalizedError {
     case missingRouteOrEndpoint
+    case missingEndpointDataVariable
     
     public var errorDescription: String? {
         switch self {
         case .missingRouteOrEndpoint:
             return "No route or endpoint selected."
+        case .missingEndpointDataVariable:
+            return "A data variable required for this endpoint is missing"
         }
     }
 }
@@ -87,11 +90,14 @@ extension ResponderViewModel {
             )
 
         case .lead:
-            let schedules = weeklyScheduleVm.schedules
+            let activeSchedules = weeklyScheduleVm.schedules.filter { $0.value.enabled }
+            guard !activeSchedules.isEmpty else {
+                throw ResponderViewModelError.missingEndpointDataVariable
+            }
             let vars = MailerAPILeadVariables(
                 name:        client,
                 dog:         dog,
-                availability: schedules
+                availability: activeSchedules
             )
             return try LeadPayload(
                 endpoint:      endpoint,
