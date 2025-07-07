@@ -54,7 +54,7 @@ extension ResponderViewModel {
                     attachments:   nil,
                     addHeaders:    headers
                 )
-            case .availability:
+            case .availabilityRequest:
                 guard let sessions = Int(sessionCount) else {
                     throw ResponderViewModelError.faultyArgument
                 }
