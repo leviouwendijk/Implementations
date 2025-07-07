@@ -356,7 +356,6 @@ public class ResponderViewModel: ObservableObject {
         sharedMailerCommandCopy = newValue
     }
 
-
     public func cleanThisView() {
         self.contactsVm.resetSelectedContact()
         clearContact()
@@ -466,6 +465,40 @@ public class ResponderViewModel: ObservableObject {
                     }
                 }
 
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    withAnimation { self.showSuccessBanner = false }
+                }
+            }
+        }
+    }
+
+    public func send() throws {
+        let payload = try makePayload()
+
+        mailerOutput = ""
+        withAnimation { isSendingEmail = true }
+
+        let client = MailerAPIClient()
+        client.send(payload) { result in
+            DispatchQueue.main.async {
+                withAnimation { self.isSendingEmail = false }
+
+                switch result {
+                case .success(let data):
+                    let responseString = String(data: data, encoding: .utf8) ?? "<no‐body>"
+                    self.mailerOutput = responseString
+                    self.bannerColor = .green
+                    self.successBannerMessage = "Email sent successfully."
+
+                    self.cleanThisView()
+
+                case .failure(let error):
+                    self.mailerOutput = "Error: \(error.localizedDescription)"
+                    self.bannerColor = .red
+                    self.successBannerMessage = "Failed to send email."
+                }
+
+                self.showSuccessBanner = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     withAnimation { self.showSuccessBanner = false }
                 }
