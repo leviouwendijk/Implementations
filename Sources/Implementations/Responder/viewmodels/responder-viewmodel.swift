@@ -490,6 +490,7 @@ public class ResponderViewModel: ObservableObject {
                            fetch.success
                         {
                             self.fetchedHtml = fetch.html
+                            self.mailerOutput = String(data: data, encoding: .utf8) ?? "<no-body>"
                             self.bannerColor = .green
                             self.successBannerMessage = "Template loaded."
                         } else {
