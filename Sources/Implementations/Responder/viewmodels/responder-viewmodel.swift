@@ -485,17 +485,30 @@ public class ResponderViewModel: ObservableObject {
 
                 switch result {
                 case .success(let data):
-                    let responseString = String(data: data, encoding: .utf8) ?? "<no‐body>"
-                    self.mailerOutput = responseString
-                    self.bannerColor = .green
-                    self.successBannerMessage = "Email sent successfully."
-
-                    self.cleanThisView()
+                    if self.apiPathVm.selectedRoute == .template {
+                        if let fetch = try? JSONDecoder().decode(TemplateFetchResponse.self, from: data),
+                           fetch.success
+                        {
+                            self.fetchedHtml = fetch.html
+                            self.bannerColor = .green
+                            self.successBannerMessage = "Template loaded."
+                        } else {
+                            self.mailerOutput = String(data: data, encoding: .utf8) ?? "<no-body>"
+                            self.bannerColor = .red
+                            self.successBannerMessage = "Failed to parse template."
+                        }
+                    } else {
+                        let responseString = String(data: data, encoding: .utf8) ?? "<no-body>"
+                        self.mailerOutput = responseString
+                        self.bannerColor = .green
+                        self.successBannerMessage = "Email sent successfully."
+                        self.cleanThisView()
+                    }
 
                 case .failure(let error):
                     self.mailerOutput = "Error: \(error.localizedDescription)"
                     self.bannerColor = .red
-                    self.successBannerMessage = "Failed to send email."
+                    self.successBannerMessage = "Request failed."
                 }
 
                 self.showSuccessBanner = true
