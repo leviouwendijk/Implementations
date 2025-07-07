@@ -231,7 +231,8 @@ public class ResponderViewModel: ObservableObject {
     }
 
     public var finalHtml: String {
-        return fetchedHtml.htmlClean()
+        // return fetchedHtml.htmlClean() // no longer converting for CLI
+        return fetchedHtml
             .replaceClientDogTemplatePlaceholders(client: client, dog: dog)
     }
 
