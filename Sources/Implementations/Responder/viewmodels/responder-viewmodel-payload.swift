@@ -159,19 +159,25 @@ extension ResponderViewModel {
             )
 
         case .custom:
+            guard !finalSubject.isEmpty else {
+                throw ResponderViewModelError.missingEndpointDataVariable
+            }
             let vars = MailerAPICustomVariables(
                 body:         finalHtml,
                 availability: weeklyScheduleVm.schedules
             )
             return try CustomPayload(
-                endpoint:      endpoint,
-                variables:     vars,
-                emailsTo:      toList,
-                emailsCC:      ccList,
-                emailsBCC:     bccList,
-                emailsReplyTo: replyList,
-                attachments:   nil,
-                addHeaders:    headers
+                endpoint:       endpoint,
+                variables:      vars,
+                emailsTo:       toList,
+                emailsCC:       ccList,
+                emailsBCC:      bccList,
+                emailsReplyTo:  replyList,
+                attachments:    nil,
+                addHeaders:     headers,
+                includeQuote:   includeQuoteInCustomMessage,
+                includeInvoice: false,
+                subject:        finalSubject
             )
 
         case .template:
