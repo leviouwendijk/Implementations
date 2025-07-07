@@ -6,6 +6,8 @@ import Structures
 public enum ResponderViewModelError: LocalizedError {
     case missingRouteOrEndpoint
     case missingEndpointDataVariable
+    case faultyArgument
+    case incompatibleEndpoint
     
     public var errorDescription: String? {
         switch self {
@@ -13,6 +15,10 @@ public enum ResponderViewModelError: LocalizedError {
             return "No route or endpoint selected."
         case .missingEndpointDataVariable:
             return "A data variable required for this endpoint is missing"
+        case .faultyArgument:
+            return "One of the inputs is wrong for this endpoint"
+        case .incompatibleEndpoint:
+            return "This endpoint cannot work with this route"
         }
     }
 }
@@ -31,21 +37,46 @@ extension ResponderViewModel {
 
         switch route {
         case .appointment:
-            let vars = MailerAPIAppointmentVariables(
-                name:         client,
-                dog:          dog,
-                appointments: appointmentsQueue
-            )
-            return try AppointmentPayload(
-                endpoint:      endpoint,
-                variables:     vars,
-                emailsTo:      toList,
-                emailsCC:      ccList,
-                emailsBCC:     bccList,
-                emailsReplyTo: replyList,
-                attachments:   nil,
-                addHeaders:    headers
-            )
+            switch endpoint {
+            case .confirmation:
+                let vars = MailerAPIAppointmentVariables(
+                    name:         client,
+                    dog:          dog,
+                    appointments: appointmentsQueue
+                )
+                return try AppointmentPayload(
+                    endpoint:      endpoint,
+                    variables:     vars,
+                    emailsTo:      toList,
+                    emailsCC:      ccList,
+                    emailsBCC:     bccList,
+                    emailsReplyTo: replyList,
+                    attachments:   nil,
+                    addHeaders:    headers
+                )
+            case .availability:
+                guard let sessions = Int(sessionCount) else {
+                    throw ResponderViewModelError.faultyArgument
+                }
+                let vars = MailerAPIAppointmentAvailabilityVariables(
+                    name:         client,
+                    dog:          dog,
+                    email:        email,
+                    session_count: sessions
+                )
+                return try AppointmentAvailabilityPayload(
+                    endpoint:      endpoint,
+                    variables:     vars,
+                    emailsTo:      toList,
+                    emailsCC:      ccList,
+                    emailsBCC:     bccList,
+                    emailsReplyTo: replyList,
+                    attachments:   nil,
+                    addHeaders:    headers
+                )
+            default: 
+                throw ResponderViewModelError.incompatibleEndpoint
+            }
 
         case .invoice:
             let iv = invoiceVm.invoiceVariables

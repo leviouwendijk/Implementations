@@ -54,6 +54,8 @@ public class ResponderViewModel: ObservableObject {
     @Published public var toMinutes = ""
     @Published public var price = ""
 
+    @Published public var sessionCount = ""
+
     public var agreementDeliverable: AgreementDeliverable {
         let overrideDuration: Bool = (!fromMinutes.isEmpty && !toMinutes.isEmpty)
         let from = Int(fromMinutes) ?? 0
