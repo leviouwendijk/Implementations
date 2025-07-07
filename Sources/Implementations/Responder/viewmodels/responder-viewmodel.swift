@@ -6,6 +6,7 @@ import Structures
 import Interfaces
 import Contacts
 import Economics
+import Extensions
 
 // small helper
 public struct TemplateFetchResponse: Decodable {
