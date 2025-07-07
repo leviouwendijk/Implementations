@@ -261,7 +261,7 @@ public class ResponderViewModel: ObservableObject {
     public var selectedWAMessageReplaced: String {
         // return selectedWAMessage.replaced(client: client, dog: dog)
         return selectedWAMessage
-        .rawValue
+        .message
         .convertingReplacements(
             replacements: WAMessageReplacements()
         )
