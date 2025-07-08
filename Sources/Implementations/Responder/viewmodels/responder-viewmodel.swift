@@ -55,6 +55,7 @@ public class ResponderViewModel: ObservableObject {
     @Published public var price = ""
 
     @Published public var sessionCount = ""
+    @Published public var includeReflection = false
 
     public var agreementDeliverable: AgreementDeliverable {
         let overrideDuration: Bool = (!fromMinutes.isEmpty && !toMinutes.isEmpty)

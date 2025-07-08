@@ -62,7 +62,8 @@ extension ResponderViewModel {
                     name:         client,
                     dog:          dog,
                     email:        email,
-                    session_count: sessions
+                    session_count: sessions,
+                    reflection: includeReflection
                 )
                 return try AppointmentAvailabilityPayload(
                     endpoint:      endpoint,
