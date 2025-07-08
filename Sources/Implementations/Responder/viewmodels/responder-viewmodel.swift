@@ -113,6 +113,8 @@ public class ResponderViewModel: ObservableObject {
     public let months = Calendar.current.monthSymbols
     public let hours = Array(0...23)
     public let minutes = Array(0...59)
+
+    @Published public var errorMessage = ""
     
     public var days: [Int] {
         let comps = DateComponents(year: self.year, month: self.selectedMonth)
