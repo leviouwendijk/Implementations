@@ -147,7 +147,7 @@ extension ResponderViewModel {
                     emailsBCC:     bccList,
                     emailsReplyTo: replyList,
                     attachments:   nil,
-                    addHeaders:    headers
+                    addHeaders:    headers,
                 )
             }
 
