@@ -8,6 +8,7 @@ public enum ResponderViewModelError: LocalizedError {
     case missingEndpointDataVariable
     case faultyArgument
     case incompatibleEndpoint
+    case incompatibleSubEndpoint
     
     public var errorDescription: String? {
         switch self {
@@ -19,6 +20,8 @@ public enum ResponderViewModelError: LocalizedError {
             return "One of the inputs is wrong for this endpoint"
         case .incompatibleEndpoint:
             return "This endpoint cannot work with this route"
+        case .incompatibleSubEndpoint:
+            return "This sub-endpoint cannot work with this route or endpoint"
         }
     }
 }
@@ -37,7 +40,7 @@ extension ResponderViewModel {
 
         switch route {
         case .appointment:
-            switch endpoint {
+            switch endpoint.base {
             case .confirmation:
                 let vars = MailerAPIAppointmentVariables(
                     name:         client,
@@ -54,7 +57,10 @@ extension ResponderViewModel {
                     attachments:   nil,
                     addHeaders:    headers
                 )
-            case .availabilityRequest:
+            case .availability:
+                guard endpoint.sub == .request else {
+                    throw ResponderViewModelError.incompatibleSubEndpoint
+                }
                 guard let sessions = Int(sessionCount) else {
                     throw ResponderViewModelError.faultyArgument
                 }
@@ -106,20 +112,44 @@ extension ResponderViewModel {
             )
 
         case .quote:
-            let vars = MailerAPIQuoteVariables(
-                name: client,
-                dog:  dog
-            )
-            return try QuotePayload(
-                endpoint:      endpoint,
-                variables:     vars,
-                emailsTo:      toList,
-                emailsCC:      ccList,
-                emailsBCC:     bccList,
-                emailsReplyTo: replyList,
-                attachments:   nil,
-                addHeaders:    headers
-            )
+            switch endpoint.base {
+            case .agreement:
+                guard endpoint.sub == .request else {
+                    throw ResponderViewModelError.incompatibleSubEndpoint
+                }
+                let vars = MailerAPIQuoteAgreementVariables(
+                    name: client,
+                    dog:  dog,
+                    email: email,
+                    deliverable: agreementDeliverable
+                )
+                return try QuoteAgreementPayload(
+                    endpoint:      endpoint,
+                    variables:     vars,
+                    emailsTo:      toList,
+                    emailsCC:      ccList,
+                    emailsBCC:     bccList,
+                    emailsReplyTo: replyList,
+                    attachments:   nil,
+                    addHeaders:    headers
+                )
+
+            default:
+                let vars = MailerAPIQuoteVariables(
+                    name: client,
+                    dog:  dog
+                )
+                return try QuotePayload(
+                    endpoint:      endpoint,
+                    variables:     vars,
+                    emailsTo:      toList,
+                    emailsCC:      ccList,
+                    emailsBCC:     bccList,
+                    emailsReplyTo: replyList,
+                    attachments:   nil,
+                    addHeaders:    headers
+                )
+            }
 
         case .lead:
             let activeSchedules = weeklyScheduleVm.schedules.filter { $0.value.enabled }
