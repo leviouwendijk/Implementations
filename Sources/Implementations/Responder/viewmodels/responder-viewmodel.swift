@@ -28,6 +28,7 @@ public class ResponderViewModel: ObservableObject {
     @Published public var weeklyScheduleVm = WeeklyScheduleViewModel()
     @Published public var contactsVm = ContactsListViewModel()
     @Published public var apiPathVm = MailerAPISelectionViewModel()
+    // @Published public var blockedWeekdaysVm = MailerAPISelectionViewModel()
 
     @Published public var mailerOutput: String = ""
     @Published public var sharedMailerCommandCopy: String = ""
