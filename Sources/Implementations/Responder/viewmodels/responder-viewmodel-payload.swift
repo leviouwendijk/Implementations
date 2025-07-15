@@ -69,7 +69,8 @@ extension ResponderViewModel {
                     dog:          dog,
                     email:        email,
                     session_count: sessions,
-                    reflection: includeReflection
+                    reflection: includeReflection,
+                    blocked_weekdays: blockedWeekdaysVm.apiModels
                 )
                 return try AppointmentAvailabilityPayload(
                     endpoint:      endpoint,
