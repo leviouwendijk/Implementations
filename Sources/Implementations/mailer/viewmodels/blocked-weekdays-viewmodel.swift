@@ -19,7 +19,10 @@ public class BlockedWeekdaysViewModel: ObservableObject {
     @Published public var items: [BlockedWeekdayItem]
 
     public init(
-        initial: [MailerAPIBlockedWeekday] = []
+        initial: [MailerAPIBlockedWeekday] = [
+            .init(weekday: .monday),
+            .init(weekday: .tuesday)
+        ]
     ) {
         let onSet = Set(initial.map(\.weekday))
         let limitMap: [MailerAPIWeekday: Int] = Dictionary(
