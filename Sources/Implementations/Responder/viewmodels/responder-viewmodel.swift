@@ -96,7 +96,7 @@ public class ResponderViewModel: ObservableObject {
     @Published public var fetchedHtml: String = ""
     @Published public var subject: String = ""
 
-    @Published public var includeQuoteInCustomMessage = false
+    @Published public var includeQuoteOverride = false
 
     @Published public var selectedWAMessage: WAMessageTemplate = .calledVariationI
 
@@ -342,7 +342,7 @@ public class ResponderViewModel: ObservableObject {
             finalEmail: finalEmail,
             finalSubject: finalSubject,
             finalHtml: finalHtml,
-            includeQuote: includeQuoteInCustomMessage
+            includeQuote: includeQuoteOverride
         )
 
         let args = MailerCLIArguments(
@@ -367,8 +367,8 @@ public class ResponderViewModel: ObservableObject {
         self.contactsVm.resetSelectedContact()
         clearContact()
         clearQueue()
-        if includeQuoteInCustomMessage {
-            includeQuoteInCustomMessage = false
+        if includeQuoteOverride {
+            includeQuoteOverride = false
         }
     }
     

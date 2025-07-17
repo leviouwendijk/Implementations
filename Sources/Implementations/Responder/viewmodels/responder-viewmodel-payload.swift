@@ -132,7 +132,8 @@ extension ResponderViewModel {
                     emailsBCC:     bccList,
                     emailsReplyTo: replyList,
                     attachments:   nil,
-                    addHeaders:    headers
+                    addHeaders:    headers,
+                    includeQuote:  includeQuoteOverride
                 )
 
             default:
@@ -238,7 +239,7 @@ extension ResponderViewModel {
                 emailsReplyTo:  replyList,
                 attachments:    nil,
                 addHeaders:     headers,
-                includeQuote:   includeQuoteInCustomMessage,
+                includeQuote:   includeQuoteOverride,
                 includeInvoice: false,
                 subject:        finalSubject
             )
