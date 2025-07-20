@@ -1,6 +1,6 @@
 import Foundation
 
-public class CodeAndPreviewViewModel: ObservableObject {
+public class HTMLPreviewViewModel: ObservableObject {
     @Published public var html: String = """
     <h1>Hello</h1><p>Edit me → see preview live</p>
     """
