@@ -174,6 +174,32 @@ extension ResponderViewModel {
                 addHeaders:    headers
             )
 
+        case .onboarding:
+            guard endpoint.sub == .assessment else {
+                throw ResponderViewModelError.incompatibleSubEndpoint
+            }
+
+            guard !client.isEmpty, !dog.isEmpty, !email.isEmpty else {
+                throw ResponderViewModelError.missingEndpointDataVariable
+            }
+
+            let vars = MailerAPIOnboardingVariables(
+                name:  client,
+                dog:   dog,
+                email: email
+            )
+
+            return try OnboardingPayload(
+                endpoint:      endpoint,
+                variables:     vars,
+                emailsTo:      toList,
+                emailsCC:      ccList,
+                emailsBCC:     bccList,
+                emailsReplyTo: replyList,
+                attachments:   nil,
+                addHeaders:    headers
+            )
+
         case .service:
             let vars = MailerAPIServiceVariables(
                 name: client,

@@ -13,7 +13,8 @@ public func renderInvoice(
 ) throws {
     try prepareEnvironment()
 
-    var repls: [StringTemplateReplacement] = invoice.replacements()
+    // var repls: [StringTemplateReplacement] = invoice.replacements() // this is being worked on in lib: `Commerce`
+    var repls: [StringTemplateReplacement] = []
 
     // let logoPath = try LoadableResource(name: "logo", fileExtension: "png").path()
     let logoPath = try ResourcesEnvironment.require(logo)
