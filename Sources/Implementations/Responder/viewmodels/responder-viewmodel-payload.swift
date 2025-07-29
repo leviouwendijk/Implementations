@@ -175,7 +175,7 @@ extension ResponderViewModel {
             )
 
         case .onboarding:
-            guard endpoint.sub == .assessment else {
+            guard endpoint.sub == .request else {
                 throw ResponderViewModelError.incompatibleSubEndpoint
             }
 
