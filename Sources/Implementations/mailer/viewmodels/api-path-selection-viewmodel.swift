@@ -3,6 +3,26 @@ import Combine
 import Interfaces
 import Structures
 
+public enum StageTab: String, CaseIterable, Identifiable, Sendable {
+    case all = "All"
+    case sales = "Sales"
+    case operations = "Operations"
+    case billing = "Billing"
+    case other = "Other"
+
+    public var id: Self { self }
+
+    public var apiStage: MailerAPIEndpointStage? {
+        switch self {
+        case .all:        return nil
+        case .sales:      return .sales
+        case .operations: return .operations
+        case .billing:    return .billing
+        case .other:      return .other
+        }
+    }
+}
+
 public class MailerAPISelectionViewModel: ObservableObject {
     @Published public var selectedRoute: MailerAPIRoute? {
         didSet {
@@ -30,9 +50,29 @@ public class MailerAPISelectionViewModel: ObservableObject {
         }
     }
 
+    @Published public var selectedStage: StageTab = .all {
+        didSet {
+            // If current route falls outside filter, clear current selection
+            if let r = selectedRoute, !filteredRoutes.contains(r) {
+                selectedRoute = nil
+                selectedEndpoint = nil
+            }
+        }
+    }
+
     public var validEndpoints: [MailerAPIEndpoint] {
         guard let route = selectedRoute else { return [] }
         return MailerAPIPath.endpoints(for: route)
+    }
+    
+    public var filteredRoutes: [MailerAPIRoute] {
+        let routes = MailerAPIRoute.allCases
+        guard let stage = selectedStage.apiStage else {
+            return routes.sorted { $0.viewableString() < $1.viewableString() }
+        }
+        return routes
+            .filter { MailerAPIPath.stage(for: $0) == stage }
+            .sorted { $0.viewableString() < $1.viewableString() }
     }
 
     public var apiPath: MailerAPIPath? {
