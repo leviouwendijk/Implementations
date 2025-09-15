@@ -279,6 +279,22 @@ extension ResponderViewModel {
                 endpoint:      endpoint,
                 variables:     vars
             )
+
+        case .support:
+            let vars = MailerAPISupportVariables(
+                name: client,
+                dog:  dog
+            )
+            return try SupportPayload(
+                endpoint:      endpoint,
+                variables:     vars,
+                emailsTo:      toList,
+                emailsCC:      ccList,
+                emailsBCC:     bccList,
+                emailsReplyTo: replyList,
+                attachments:   nil,
+                addHeaders:    headers
+            )
         }
     }
 }
