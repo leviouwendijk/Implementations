@@ -23,6 +23,23 @@ public struct TemplateFetchResponse: Decodable {
 }
 // depr.: can be replaced with Surfaces eventually
 
+public struct APIEnvelope: Decodable {
+    let success: Bool
+    let message: String?
+}
+
+public func formatError(_ e: Error) -> String {
+    if let le = e as? LocalizedError {
+        let parts = [
+            le.errorDescription,
+            le.failureReason,
+            le.recoverySuggestion
+        ].compactMap { $0 }
+        if !parts.isEmpty { return parts.joined(separator: " — ") }
+    }
+    return e.localizedDescription
+}
+
 @MainActor
 public class ResponderViewModel: ObservableObject {
     @Published public var invoiceVm = MailerAPIInvoiceVariablesViewModel()
@@ -484,6 +501,54 @@ public class ResponderViewModel: ObservableObject {
         }
     }
 
+    // public func send() throws {
+    //     let payload = try makePayload()
+
+    //     mailerOutput = ""
+    //     withAnimation { isSendingEmail = true }
+
+    //     let client = MailerAPIClient()
+    //     client.send(payload) { result in
+    //         DispatchQueue.main.async {
+    //             withAnimation { self.isSendingEmail = false }
+
+    //             switch result {
+    //             case .success(let data):
+    //                 if self.apiPathVm.selectedRoute == .template {
+    //                     if let fetch = try? JSONDecoder().decode(TemplateFetchResponse.self, from: data),
+    //                        fetch.success
+    //                     {
+    //                         self.fetchedHtml = fetch.html
+    //                         self.mailerOutput = String(data: data, encoding: .utf8) ?? "<no-body>"
+    //                         self.bannerColor = .green
+    //                         self.successBannerMessage = "Template loaded."
+    //                     } else {
+    //                         self.mailerOutput = String(data: data, encoding: .utf8) ?? "<no-body>"
+    //                         self.bannerColor = .red
+    //                         self.successBannerMessage = "Failed to parse template."
+    //                     }
+    //                 } else {
+    //                     let responseString = String(data: data, encoding: .utf8) ?? "<no-body>"
+    //                     self.mailerOutput = responseString
+    //                     self.bannerColor = .green
+    //                     self.successBannerMessage = "Email sent successfully."
+    //                     self.cleanThisView()
+    //                 }
+
+    //             case .failure(let error):
+    //                 self.mailerOutput = "Error: \(error.localizedDescription)"
+    //                 self.bannerColor = .red
+    //                 self.successBannerMessage = "Request failed."
+    //             }
+
+    //             self.showSuccessBanner = true
+    //             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+    //                 withAnimation { self.showSuccessBanner = false }
+    //             }
+    //         }
+    //     }
+    // }
+
     public func send() throws {
         let payload = try makePayload()
 
@@ -497,6 +562,15 @@ public class ResponderViewModel: ObservableObject {
 
                 switch result {
                 case .success(let data):
+                    if let env = try? JSONDecoder().decode(APIEnvelope.self, from: data), env.success == false {
+                        let body = String(data: data, encoding: .utf8) ?? "<no-body>"
+                        let msg  = env.message ?? "Request failed (server reported success=false)."
+                        self.mailerOutput = body
+                        self.bannerColor = .red
+                        self.successBannerMessage = msg
+                        break
+                    }
+
                     if self.apiPathVm.selectedRoute == .template {
                         if let fetch = try? JSONDecoder().decode(TemplateFetchResponse.self, from: data),
                            fetch.success
@@ -519,9 +593,16 @@ public class ResponderViewModel: ObservableObject {
                     }
 
                 case .failure(let error):
-                    self.mailerOutput = "Error: \(error.localizedDescription)"
+                    var msg = formatError(error)
+
+                    if case let MailerAPIError.server(status, body) = error {
+                        let trimmed = body.count > 600 ? body.prefix(600) + "…" : Substring(body)
+                        msg = "HTTP \(status) — \(msg) — Body: \(trimmed)"
+                    }
+
+                    self.mailerOutput = msg
                     self.bannerColor = .red
-                    self.successBannerMessage = "Request failed."
+                    self.successBannerMessage = msg
                 }
 
                 self.showSuccessBanner = true
