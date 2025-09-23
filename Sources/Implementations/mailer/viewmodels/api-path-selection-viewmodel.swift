@@ -9,6 +9,7 @@ public enum StageTab: String, CaseIterable, Identifiable, Sendable {
     case operations = "Operations"
     case billing = "Billing"
     case other = "Other"
+    case testing = "Testing"
 
     public var id: Self { self }
 
@@ -19,6 +20,7 @@ public enum StageTab: String, CaseIterable, Identifiable, Sendable {
         case .operations: return .operations
         case .billing:    return .billing
         case .other:      return .other
+        case .testing:    return .testing
         }
     }
 }
