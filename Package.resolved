@@ -1,5 +1,5 @@
 {
-  "originHash" : "dbe854365e864eac245e1199866676772cb0b6317503ead310dc143942250ae7",
+  "originHash" : "aac7dddeb4a41223b3c4c50d43ce5396b81d9ee4f7e40468e140494cdbb4ae11",
   "pins" : [
     {
       "identity" : "commerce",
@@ -34,7 +34,7 @@
       "location" : "https://github.com/leviouwendijk/Interfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "b118d63b5665486a5e6d79fb551ff1360c4bee44"
+        "revision" : "27e1b0eb9a3c258557b434c5a1a44406d3687acc"
       }
     },
     {

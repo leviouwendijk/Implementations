@@ -59,7 +59,7 @@ public class ResponderViewModel: ObservableObject {
     @Published public var sessionCount = ""
     @Published public var includeReflection = false
 
-    @Published public var pickerMode = false
+    @Published public var pickerMode: Bool
 
     public var agreementDeliverable: AgreementDeliverable {
         let overrideDuration: Bool = (!fromMinutes.isEmpty && !toMinutes.isEmpty)
@@ -319,7 +319,9 @@ public class ResponderViewModel: ObservableObject {
 
     private var cancellables: [AnyCancellable] = []
 
-    public init() {
+    public init(pickerMode: Bool = false) {
+        self.pickerMode = pickerMode
+
         invoiceVm.objectWillChange
             .sink { [weak self] in self?.objectWillChange.send() }
             .store(in: &cancellables)
