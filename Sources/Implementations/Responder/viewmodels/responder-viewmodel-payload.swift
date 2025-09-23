@@ -295,6 +295,24 @@ extension ResponderViewModel {
                 attachments:   nil,
                 addHeaders:    headers
             )
+
+        case .test:
+            let vars = MailerAPITestVariables(
+                message: finalSubject.isEmpty ? nil : finalSubject,
+                statusCode: nil,
+                extra: ["client": client, "dog": dog]
+            )
+
+            return try TestPayload(
+                endpoint:      endpoint,
+                variables:     vars,
+                emailsTo:      toList,
+                emailsCC:      ccList,
+                emailsBCC:     bccList,
+                emailsReplyTo: replyList,
+                attachments:   nil,
+                addHeaders:    headers
+            )
         }
     }
 }
