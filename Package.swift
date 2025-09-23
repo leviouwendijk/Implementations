@@ -19,6 +19,10 @@ let package = Package(
             url: "https://github.com/leviouwendijk/plate.git",
             branch: "master"
         ),
+        .package(
+            url: "https://github.com/leviouwendijk/Structures.git",
+            branch: "master"
+        ),
         // .package(
         //     url: "https://github.com/leviouwendijk/ViewComponents.git",
         //     branch: "master"
@@ -29,10 +33,6 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/leviouwendijk/Economics.git",
-            branch: "master"
-        ),
-        .package(
-            url: "https://github.com/leviouwendijk/Structures.git",
             branch: "master"
         ),
         .package(
@@ -47,10 +47,10 @@ let package = Package(
             name: "Implementations",
             dependencies: [
                 .product(name: "plate", package: "plate"),
+                .product(name: "Structures", package: "Structures"),
                 // .product(name: "ViewComponents", package: "ViewComponents"),
                 .product(name: "Interfaces", package: "Interfaces"),
                 .product(name: "Economics", package: "Economics"),
-                .product(name: "Structures", package: "Structures"),
                 .product(name: "Commerce", package: "Commerce"),
             ],
             resources: [

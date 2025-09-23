@@ -21,6 +21,7 @@ public struct TemplateFetchResponse: Decodable {
         self.html = html
     }
 }
+// depr.: can be replaced with Surfaces eventually
 
 @MainActor
 public class ResponderViewModel: ObservableObject {
@@ -57,6 +58,8 @@ public class ResponderViewModel: ObservableObject {
 
     @Published public var sessionCount = ""
     @Published public var includeReflection = false
+
+    @Published public var pickerMode = false
 
     public var agreementDeliverable: AgreementDeliverable {
         let overrideDuration: Bool = (!fromMinutes.isEmpty && !toMinutes.isEmpty)
