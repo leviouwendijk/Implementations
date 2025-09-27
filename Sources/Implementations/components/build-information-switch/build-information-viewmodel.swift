@@ -3,6 +3,7 @@ import Structures
 import Interfaces
 import plate
 
+@MainActor
 public class BuildInformationViewModel: ObservableObject {
     // public let dirURL: URL
 
