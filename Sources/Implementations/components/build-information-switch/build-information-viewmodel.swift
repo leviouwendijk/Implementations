@@ -17,9 +17,9 @@ public class BuildInformationViewModel: ObservableObject {
 
     @Published public var current: Int = 0
 
-    @Published private(set) var isUpdateAvailable: Bool = false
-    @Published private(set) var isBinaryOutdated: Bool = false
-    @Published private(set) var isBinaryAheadOfLocal: Bool = false  
+    @Published public var isUpdateAvailable: Bool = false
+    @Published public var isBinaryOutdated: Bool = false
+    @Published public var isBinaryAheadOfLocal: Bool = false  
     @Published public var updateError: String = ""
 
     public init(
