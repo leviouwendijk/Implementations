@@ -24,9 +24,9 @@ public class BuildInformationViewModel: ObservableObject {
     @Published public var updateError: String = ""
 
     public init(
-        alignment: AlignmentStyle = .center,
-        display: [[BuildInformationDisplayComponents]] = [[.version], [.latestVersion], [.name], [.author]],
-        prefixStyle: VersionPrefixStyle = .long
+        alignment: AlignmentStyle,
+        display: [[BuildInformationDisplayComponents]],
+        prefixStyle: VersionPrefixStyle
     ) {
         self.build_object = try? BuildObjectConfiguration(traversingFor: "build-object.pkl", maxDepth: 5)
         self.compiled_object = try? CompiledLocalBuildObject(traversingFor: "compiled.pkl", maxDepth: 5)
