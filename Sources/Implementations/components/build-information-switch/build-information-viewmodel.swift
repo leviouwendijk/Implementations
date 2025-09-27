@@ -20,7 +20,7 @@ public class BuildInformationViewModel: ObservableObject {
     @Published private(set) var isUpdateAvailable: Bool = false
     @Published private(set) var isBinaryOutdated: Bool = false
     @Published private(set) var isBinaryAheadOfLocal: Bool = false  
-    @Published private(set) var updateError: String = ""
+    @Published public var updateError: String = ""
 
     public init(
         alignment: AlignmentStyle = .center,
