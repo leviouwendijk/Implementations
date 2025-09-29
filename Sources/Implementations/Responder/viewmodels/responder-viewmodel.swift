@@ -351,6 +351,10 @@ public class ResponderViewModel: ObservableObject {
         apiPathVm.objectWillChange
             .sink { [weak self] in self?.objectWillChange.send() }
             .store(in: &cancellables)
+
+        messagesStore.objectWillChange
+            .sink { [weak self] in self?.objectWillChange.send() }
+            .store(in: &cancellables)
     }
 
     public func constructMailerCommand(_ includeBinaryName: Bool = false) throws -> String {
