@@ -94,14 +94,6 @@ public class ResponderViewModel: ObservableObject {
         )
     }
 
-    // public var noContactSelectedButIsRequired: Bool {
-    //     return (selectedContact == nil && apiPathVm.requiresSelectedContact)
-    // }
-
-    // public var noContactButIsRequiredAndEmailEmpty: Bool {
-    //     return (selectedContact == nil && apiPathVm.requiresSelectedContact)
-    // }
-
     @Published public var showSuccessBanner = false
     @Published public var successBannerMessage = ""
 
@@ -123,9 +115,9 @@ public class ResponderViewModel: ObservableObject {
     // @Published public var selectedMessage: ReusableTextMessageObject = ""
     @Published public var selectedMessageKey: String? = nil
 
-    public var selectedMessage: ReusableTextMessageObject? {
+    public var selectedMessage: ReusableTextMessage? {
         guard let key = selectedMessageKey else { return nil }
-        return messagesStore.messages.first { $0.key == key }
+        return messagesStore.message(forKey: key)
     }
 
     // ADDING DATE PICKER 
@@ -250,10 +242,6 @@ public class ResponderViewModel: ObservableObject {
 
     // END OF ADD DATE PICKER
 
-
-
-
-
     public var finalEmail: String {
         email
         .commaSeparatedValuesToParsableArgument
@@ -296,7 +284,6 @@ public class ResponderViewModel: ObservableObject {
     public var selectedWAMessageReplaced: String? {
         guard let selected = selectedMessage else { return nil }
         return selected
-        .object
         .content
         .message
         .convertingReplacements(
@@ -503,54 +490,6 @@ public class ResponderViewModel: ObservableObject {
             }
         }
     }
-
-    // public func send() throws {
-    //     let payload = try makePayload()
-
-    //     mailerOutput = ""
-    //     withAnimation { isSendingEmail = true }
-
-    //     let client = MailerAPIClient()
-    //     client.send(payload) { result in
-    //         DispatchQueue.main.async {
-    //             withAnimation { self.isSendingEmail = false }
-
-    //             switch result {
-    //             case .success(let data):
-    //                 if self.apiPathVm.selectedRoute == .template {
-    //                     if let fetch = try? JSONDecoder().decode(TemplateFetchResponse.self, from: data),
-    //                        fetch.success
-    //                     {
-    //                         self.fetchedHtml = fetch.html
-    //                         self.mailerOutput = String(data: data, encoding: .utf8) ?? "<no-body>"
-    //                         self.bannerColor = .green
-    //                         self.successBannerMessage = "Template loaded."
-    //                     } else {
-    //                         self.mailerOutput = String(data: data, encoding: .utf8) ?? "<no-body>"
-    //                         self.bannerColor = .red
-    //                         self.successBannerMessage = "Failed to parse template."
-    //                     }
-    //                 } else {
-    //                     let responseString = String(data: data, encoding: .utf8) ?? "<no-body>"
-    //                     self.mailerOutput = responseString
-    //                     self.bannerColor = .green
-    //                     self.successBannerMessage = "Email sent successfully."
-    //                     self.cleanThisView()
-    //                 }
-
-    //             case .failure(let error):
-    //                 self.mailerOutput = "Error: \(error.localizedDescription)"
-    //                 self.bannerColor = .red
-    //                 self.successBannerMessage = "Request failed."
-    //             }
-
-    //             self.showSuccessBanner = true
-    //             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-    //                 withAnimation { self.showSuccessBanner = false }
-    //             }
-    //         }
-    //     }
-    // }
 
     public func send() throws {
         let payload = try makePayload()
