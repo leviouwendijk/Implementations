@@ -118,7 +118,15 @@ public class ResponderViewModel: ObservableObject {
 
     @Published public var includeQuoteOverride = false
 
-    @Published public var selectedWAMessage: WAMessageTemplate = .calledVariationI
+    // @Published public var selectedWAMessage: WAMessageTemplate = .calledVariationI
+    @Published public var messagesStore: ReusableTextMessageStore = .init()
+    // @Published public var selectedMessage: ReusableTextMessageObject = ""
+    @Published public var selectedMessageKey: String? = nil
+
+    public var selectedMessage: ReusableTextMessageObject? {
+        guard let key = selectedMessageKey else { return nil }
+        return messagesStore.messages.first { $0.key == key }
+    }
 
     // ADDING DATE PICKER 
     @Published public var appointmentsQueue: [MailerAPIAppointmentContent] = [] 
@@ -285,23 +293,11 @@ public class ResponderViewModel: ObservableObject {
         return allEmpty ? fallback : sequence
     }
 
-    public var selectedWAMessageReplaced: String {
-        // return selectedWAMessage.replaced(client: client, dog: dog)
-
-        // let raw = selectedWAMessage.message
-        // print("🔍 raw template: \(raw)")
-        // print("🔍 client=“\(client)” (length \(client.count))")
-        // print("🔍 dog   =“\(dog)”   (length \(dog.count))")
-
-        // let rep = selectedWAMessage
-        // .message
-        // .convertingReplacements(
-        //     replacements: WAMessageReplacements()
-        // )
-
-        // print("repl.: ", "\n", rep)
-
-        return selectedWAMessage
+    public var selectedWAMessageReplaced: String? {
+        guard let selected = selectedMessage else { return nil }
+        return selected
+        .object
+        .content
         .message
         .convertingReplacements(
             replacements: WAMessageReplacements()
@@ -309,8 +305,9 @@ public class ResponderViewModel: ObservableObject {
     }
 
     public var waMessageContainsRawPlaceholders: Bool {
+        guard let selected = selectedWAMessageReplaced else { return false }
         let syntax = PlaceholderSyntax(prepending: "{", appending: "}", repeating: 1)
-        return selectedWAMessageReplaced
+        return selected
         .containsRawTemplatePlaceholderSyntaxes(
             placeholderSyntaxes: [syntax]
         )
