@@ -331,29 +331,31 @@ public class ResponderViewModel: ObservableObject {
         }
     }
 
-    private var cancellables: [AnyCancellable] = []
+    // private var cancellables: [AnyCancellable] = []
+
+    private var cancellables = Set<AnyCancellable>()
 
     public init(pickerMode: Bool = false) {
         self.pickerMode = pickerMode
 
         invoiceVm.objectWillChange
-            .sink { [weak self] in self?.objectWillChange.send() }
+            .sink { [weak self] _ in self?.objectWillChange.send() }
             .store(in: &cancellables)
 
         weeklyScheduleVm.objectWillChange
-            .sink { [weak self] in self?.objectWillChange.send() }
+            .sink { [weak self] _ in self?.objectWillChange.send() }
             .store(in: &cancellables)
 
         contactsVm.objectWillChange
-            .sink { [weak self] in self?.objectWillChange.send() }
+            .sink { [weak self] _ in self?.objectWillChange.send() }
             .store(in: &cancellables)
 
         apiPathVm.objectWillChange
-            .sink { [weak self] in self?.objectWillChange.send() }
+            .sink { [weak self] _ in self?.objectWillChange.send() }
             .store(in: &cancellables)
 
         messagesStore.objectWillChange
-            .sink { [weak self] in self?.objectWillChange.send() }
+            .sink { [weak self] _ in self?.objectWillChange.send() }
             .store(in: &cancellables)
     }
 
