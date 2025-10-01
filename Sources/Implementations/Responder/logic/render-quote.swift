@@ -32,13 +32,13 @@ import Interfaces
 // }
 
 // adding for convenience openening
-public struct RenderedTierResult: Sendable {
-    // public let success: Bool
-    public let outputPath: String
-}
+// public struct RenderedTierResult: Sendable {
+//     // public let success: Bool
+//     public let outputPath: String
+// }
 
-// public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws {
-public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws -> RenderedTierResult {
+public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws {
+// public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws -> RenderedTierResult {
     try prepareEnvironment()
 
     let t = try quota.tier(being: tier)
@@ -63,14 +63,18 @@ public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws -> Re
     repls.append(logoRepl)
 
     let templatePath = try ResourcesEnvironment.require(.quote_template)
-    let outputPath = "\(Home.string())/myworkdir/pdf_output/travel/offerte.pdf"
+
+    // let outputPath = "\(Home.string())/myworkdir/pdf_output/travel/offerte.pdf"
+    // deprecated in favor of env:
+    let outputPath = try ResourcesEnvironment.require(.quote_default_output)
     print("out:", outputPath)
 
     // try pdf(template: templatePath, destination: outputPath, replacements: repls)
     try pdf(template: templatePath, destination: outputPath, replacements: repls)
-    return RenderedTierResult(
-        // success: true, // not relevant yet
-        outputPath: outputPath
-    )
+    // return RenderedTierResult(
+    //     // success: true, // not relevant yet
+    //     outputPath: outputPath
+    // )
+    // no longer needed with above env var for outputPath access
 }
 
