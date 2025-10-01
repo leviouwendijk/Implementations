@@ -18,6 +18,14 @@ public class QuotaViewModel: ObservableObject {
 
     @Published public var selectedTier: QuotaTierType? = nil
 
+    // @Published public var displayPolicy: QuotaDisplayPolicy = .raw
+    @Published public var displayPolicy: QuotaPriceDisplayPolicy = .rounded(
+        multiple: 10.0,
+        direction: .down,
+        offset: 1.0,
+        integer: true
+    )
+
     public var selectedTierIsNil: Bool {
         return (self.selectedTier == nil)
     }
