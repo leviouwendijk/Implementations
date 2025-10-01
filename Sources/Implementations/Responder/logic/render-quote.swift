@@ -31,7 +31,14 @@ import Interfaces
 //     try pdf(template: templatePath, destination: outputPath, replacements: repls)
 // }
 
-public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws {
+// adding for convenience openening
+public struct RenderedTierResult: Sendable {
+    // public let success: Bool
+    public let outputPath: String
+}
+
+// public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws {
+public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws -> RenderedTierResult {
     try prepareEnvironment()
 
     let t = try quota.tier(being: tier)
@@ -59,5 +66,11 @@ public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws {
     let outputPath = "\(Home.string())/myworkdir/pdf_output/travel/offerte.pdf"
     print("out:", outputPath)
 
+    // try pdf(template: templatePath, destination: outputPath, replacements: repls)
     try pdf(template: templatePath, destination: outputPath, replacements: repls)
+    return RenderedTierResult(
+        // success: true, // not relevant yet
+        outputPath: outputPath
+    )
 }
+

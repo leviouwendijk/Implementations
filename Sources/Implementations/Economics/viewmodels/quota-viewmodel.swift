@@ -23,7 +23,7 @@ public class QuotaViewModel: ObservableObject {
         multiple: 10.0,
         direction: .down,
         offset: 1.0,
-        integer: true
+        // integer: true
     )
 
     public var selectedTierIsNil: Bool {
