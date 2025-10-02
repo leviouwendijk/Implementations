@@ -2,28 +2,28 @@ import Foundation
 import Interfaces
 
 @MainActor
-final class PostcodeLookupViewModel: ObservableObject {
-    @Published var postcode: String = ""
-    @Published var huisnummer: String = ""
-    @Published var isLoading = false
-    @Published var errorMessage: String = ""
+public final class PostcodeLookupViewModel: ObservableObject {
+    @Published public var postcode: String = ""
+    @Published public var huisnummer: String = ""
+    @Published public var isLoading = false
+    @Published public var errorMessage: String = ""
 
     // Non-editable outputs
-    @Published var rawJSON: String = ""
-    @Published var street: String = ""
-    @Published var woonplaats: String = ""
+    @Published public var rawJSON: String = ""
+    @Published public var street: String = ""
+    @Published public var woonplaats: String = ""
 
-    private let client: PostcodeClient
+    public let client: PostcodeClient
 
-    init(client: PostcodeClient = .init()) {
+    public init(client: PostcodeClient = .init()) {
         self.client = client
     }
 
-    var canSearch: Bool {
+    public var canSearch: Bool {
         client.isValidInput(postcode: postcode, huisnummer: huisnummer) && !isLoading
     }
 
-    func lookup() async {
+    public func lookup() async {
         guard canSearch else {
             errorMessage = "Voer een geldige postcode (6 tekens) en huisnummer in."
             return
