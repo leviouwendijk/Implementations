@@ -48,6 +48,9 @@ public class ResponderViewModel: ObservableObject {
     @Published public var apiPathVm = MailerAPISelectionViewModel()
     @Published public var blockedWeekdaysVm = BlockedWeekdaysViewModel()
 
+    @Published public var quotaVm = QuotaViewModel()
+    @Published public var postcodeVm = PostcodeLookupViewModel()
+
     @Published public var mailerOutput: String = ""
     @Published public var sharedMailerCommandCopy: String = ""
 
