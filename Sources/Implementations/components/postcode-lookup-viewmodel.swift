@@ -15,7 +15,9 @@ public final class PostcodeLookupViewModel: ObservableObject {
 
     public let client: PostcodeClient
 
-    public init(client: PostcodeClient = .init()) {
+    public init(
+        client: PostcodeClient = .init()
+    ) {
         self.client = client
     }
 

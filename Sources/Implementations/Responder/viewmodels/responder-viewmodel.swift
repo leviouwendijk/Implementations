@@ -386,11 +386,25 @@ public class ResponderViewModel: ObservableObject {
             includeQuoteOverride = false
         }
     }
+
+    @discardableResult
+    private func beginSendIfPossible() -> Bool {
+        if isSendingEmail { return false }
+        withAnimation { isSendingEmail = true }
+        return true
+    }
+
+    private func endSend() {
+        withAnimation { isSendingEmail = false }
+    }
     
     public func sendMailerEmail() throws {
+        guard beginSendIfPossible() else { return }
+
         mailerOutput = ""
 
-        withAnimation { isSendingEmail = true }
+        // withAnimation { isSendingEmail = true }
+        // handled by the above
 
         let arguments = try constructMailerCommand(false)
 
@@ -432,7 +446,8 @@ public class ResponderViewModel: ObservableObject {
 
             DispatchQueue.main.async {
                 // stop spinner
-                withAnimation { self.isSendingEmail = false }
+                // withAnimation { self.isSendingEmail = false }
+                // postpone
 
                 // banner
                 self.successBannerMessage = proc.terminationStatus == 0 ? "mailer completed successfully." : "mailer exited with code \(proc.terminationStatus)."
@@ -490,11 +505,15 @@ public class ResponderViewModel: ObservableObject {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     withAnimation { self.showSuccessBanner = false }
                 }
+
+                self.endSend()
             }
         }
     }
 
     public func send() throws {
+        guard beginSendIfPossible() else { return }
+
         let payload = try makePayload()
 
         mailerOutput = ""
@@ -503,7 +522,7 @@ public class ResponderViewModel: ObservableObject {
         let client = MailerAPIClient()
         client.send(payload) { result in
             DispatchQueue.main.async {
-                withAnimation { self.isSendingEmail = false }
+                // withAnimation { self.isSendingEmail = false }
 
                 switch result {
                 case .success(let data):
@@ -554,6 +573,8 @@ public class ResponderViewModel: ObservableObject {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     withAnimation { self.showSuccessBanner = false }
                 }
+
+                self.endSend()
             }
         }
     }
