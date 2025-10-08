@@ -408,6 +408,9 @@ public class ResponderViewModel: ObservableObject {
         mailerOutput += """
 
         ---------------------------- 
+        ROUTE CONTENTS:
+            route = \(apiPathVm.selectedRoute?.rawValue ?? "nil")
+
         ENDPOINT CONTENTS:
             base = \(apiPathVm.selectedEndpoint?.base.rawValue ?? "nil")
             sub = \(apiPathVm.selectedEndpoint?.sub?.rawValue ?? "nil")
