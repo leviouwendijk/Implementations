@@ -405,6 +405,16 @@ public class ResponderViewModel: ObservableObject {
 
         // withAnimation { isSendingEmail = true }
         // handled by the above
+        mailerOutput += """
+
+        ---------------------------- 
+        ENDPOINT CONTENTS:
+            base = \(apiPathVm.selectedEndpoint?.base.rawValue ?? "nil")
+            sub = \(apiPathVm.selectedEndpoint?.sub?.rawValue ?? "nil")
+            method = \(apiPathVm.selectedEndpoint?.method?.rawValue ?? "nil")
+        ---------------------------- 
+
+        """
 
         let arguments = try constructMailerCommand(false)
 
