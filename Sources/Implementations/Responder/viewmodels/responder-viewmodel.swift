@@ -408,6 +408,10 @@ public class ResponderViewModel: ObservableObject {
         mailerOutput += """
 
         ---------------------------- 
+        """
+
+        mailerOutput += """
+
         ROUTE CONTENTS:
             route = \(apiPathVm.selectedRoute?.rawValue ?? "nil")
 
@@ -415,14 +419,35 @@ public class ResponderViewModel: ObservableObject {
             base = \(apiPathVm.selectedEndpoint?.base.rawValue ?? "nil")
             sub = \(apiPathVm.selectedEndpoint?.sub?.rawValue ?? "nil")
             method = \(apiPathVm.selectedEndpoint?.method?.rawValue ?? "nil")
-        ---------------------------- 
 
         """
 
         let arguments = try constructMailerCommand(false)
 
+        mailerOutput += """
+        
+        constructMailerCommand(false):
+            \(arguments)
+
+        """
+
         let argsWithBinary = try constructMailerCommand(true)
+
+        mailerOutput += """
+
+        constructMailerCommand(true):
+            \(argsWithBinary)
+
+        (latter used in updateCommandInViewModel)
+
+        """
+
         updateCommandInViewModel(newValue: argsWithBinary)
+
+        mailerOutput += """
+        ---------------------------- 
+
+        """
 
         DispatchQueue.global(qos: .userInitiated).async {
             let home = Home.string()
