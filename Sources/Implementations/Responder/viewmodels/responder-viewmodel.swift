@@ -665,3 +665,59 @@ public class ResponderViewModel: ObservableObject {
         ]
     }
 }
+
+// extension ResponderViewModel {
+//     /// Hydrates `invoiceVm.invoiceVariables` from Numbers, exactly like the old mailer CLI.
+//     /// - Parameter rn: the “RN…” column selector (e.g. "469" or full "RN-0469" depending on sheet)
+//     /// - Behavior: open Numbers, set invoice cell, export CSV/PDF, parse & reparse JSON, then map to snake_case keys.
+//     public func hydrateInvoiceVariablesFromNumbers(rn: String, close: Bool = false) throws {
+//         // 1) Render (AppleScript -> CSV, PDF) and re/parse using Interfaces
+//         let parser = try NumbersParser(
+//             // exporter args
+//             value: rn,
+//             close: close,
+//             responder: true, // comes back to Responder rather than Ghostty
+//             // extractor/pdf args -> from env by default
+//             openingMethod: nil
+//         )
+//         try parser.renderInvoiceData() // export CSV+PDF and write reparsed JSON
+
+//         // 2) Read latest reparsed JSON (shape: { "Invoices": { "<snake_key>": "<value>", ... } })
+//         let extractor = try NumbersParserExtractor()
+//         let root = try extractor.getCurrentRender()
+//         guard let dict = root["Invoices"] else {
+//             throw NSError(domain: "Responder.Invoice", code: 1,
+//                           userInfo: [NSLocalizedDescriptionKey: "Missing 'Invoices' in reparsed JSON"])
+//         }
+
+//         // 3) Map 1:1 to our VM variables (preserve CLI key semantics)
+//         //    CLI used: client_name, email, invoice_id, due_date, product_line,
+//         //              revenue_amount, amount, vat_percentage, vat_amount, terms_total, terms_current
+//         //    Additionally provide invoice_number for /invoice/issue/url.
+//         let name           = dict["client_name"]       ?? ""
+//         let email          = dict["email"]             ?? ""
+//         let invoiceId      = dict["invoice_id"]        ?? ""
+//         let dueDate        = dict["due_date"]          ?? ""
+//         let productLine    = dict["product_line"]      ?? ""
+//         let revenueAmount  = dict["revenue_amount"]    ?? dict["amount"] ?? "" // old sheet sometimes swaps these
+//         let total          = dict["amount"]            ?? ""
+//         let vatPct         = dict["vat_percentage"]    ?? ""
+//         let vatAmt         = dict["vat_amount"]        ?? ""
+//         let termsTotal     = dict["terms_total"]       ?? ""
+//         let termsCurrent   = dict["terms_current"]     ?? ""
+
+//         // Push into your existing invoice VM (keeps the rest of your code unchanged)
+//         invoiceVm.name            = name
+//         invoiceVm.email           = email
+//         invoiceVm.invoice_id      = invoiceId
+//         invoiceVm.invoice_number  = invoiceId     // ensure /invoice/issue/url compatibility
+//         invoiceVm.due_date        = dueDate
+//         invoiceVm.product_line    = productLine
+//         invoiceVm.revenue_amount  = revenueAmount
+//         invoiceVm.amount          = total
+//         invoiceVm.vat_percentage  = vatPct
+//         invoiceVm.vat_amount      = vatAmt
+//         invoiceVm.terms_total     = termsTotal
+//         invoiceVm.terms_current   = termsCurrent
+//     }
+// }

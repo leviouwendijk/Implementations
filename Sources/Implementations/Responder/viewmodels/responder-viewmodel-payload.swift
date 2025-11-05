@@ -87,20 +87,40 @@ extension ResponderViewModel {
             }
 
         case .invoice:
-            let iv = invoiceVm.invoiceVariables
-            let vars = MailerAPIInvoiceVariables(
-                clientName:    iv.client_name,
-                email:         iv.email,
-                invoiceId:     iv.invoice_id,
-                dueDate:       iv.due_date,
-                productLine:   iv.product_line,
-                amount:        iv.amount,
-                vatPercentage: iv.vat_percentage,
-                vatAmount:     iv.vat_amount,
-                total:         iv.total,
-                termsTotal:    iv.terms_total,
-                termsCurrent:  iv.terms_current
-            )
+            // let iv = invoiceVm.invoiceVariables
+            // let vars = MailerAPIInvoiceVariables(
+            //     clientName:    iv.client_name,
+            //     email:         iv.email,
+            //     invoiceId:     iv.invoice_id,
+            //     dueDate:       iv.due_date,
+            //     productLine:   iv.product_line,
+            //     amount:        iv.amount,
+            //     vatPercentage: iv.vat_percentage,
+            //     vatAmount:     iv.vat_amount,
+            //     total:         iv.total,
+            //     termsTotal:    iv.terms_total,
+            //     termsCurrent:  iv.terms_current
+            // )
+            // return try InvoicePayload(
+            //     endpoint:      endpoint,
+            //     variables:     vars,
+            //     emailsTo:      toList,
+            //     emailsCC:      ccList,
+            //     emailsBCC:     bccList,
+            //     emailsReplyTo: replyList,
+            //     attachments:   nil,
+            //     addHeaders:    headers
+            // )
+
+            let rn_id =
+                invoiceVm.invoiceVariables.invoice_id.isEmpty
+                ? "" : invoiceVm.invoiceVariables.invoice_id
+            guard !rn_id.isEmpty else { throw ResponderViewModelError.missingEndpointDataVariable }
+
+            try invoiceVm.hydrateFromNumbers(using: rn_id, closeNumbersAfterExport: false)
+
+            let vars = invoiceVm.invoiceVariables 
+
             return try InvoicePayload(
                 endpoint:      endpoint,
                 variables:     vars,
