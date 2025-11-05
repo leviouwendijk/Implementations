@@ -121,15 +121,25 @@ extension ResponderViewModel {
 
             let vars = invoiceVm.invoiceVariables 
 
+            // Fallback: if the UI didn't provide a "to", use the Numbers-derived email
+            var toResolved = toList
+            if toResolved.isEmpty, !vars.email.isEmpty {
+                toResolved = [vars.email]
+            }
+
+            // let includeInvoice = (endpoint.base == .issue) || (endpoint.base == .expired)
+
             return try InvoicePayload(
                 endpoint:      endpoint,
                 variables:     vars,
-                emailsTo:      toList,
+                // emailsTo:      toList,
+                emailsTo:      toResolved,
                 emailsCC:      ccList,
                 emailsBCC:     bccList,
                 emailsReplyTo: replyList,
                 attachments:   nil,
-                addHeaders:    headers
+                addHeaders:    headers,
+                // includeInvoice: includeInvoice
             )
 
         case .quote:
