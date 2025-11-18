@@ -113,6 +113,8 @@ public class ResponderViewModel: ObservableObject {
 
     @Published public var includeQuoteOverride = false
 
+    @Published public var includeInvoiceDocument = true
+
     // @Published public var selectedWAMessage: WAMessageTemplate = .calledVariationI
     @Published public var messagesStore: ReusableTextMessageStore = .init()
     // @Published public var selectedMessage: ReusableTextMessageObject = ""

@@ -127,7 +127,7 @@ extension ResponderViewModel {
                 toResolved = [vars.email]
             }
 
-            let includeInvoice = (endpoint.base == .issue) || (endpoint.base == .expired)
+            // let includeInvoice = (endpoint.base == .issue) || (endpoint.base == .expired)
 
             return try InvoicePayload(
                 endpoint:      endpoint,
@@ -139,7 +139,7 @@ extension ResponderViewModel {
                 emailsReplyTo: replyList,
                 attachments:   nil,
                 addHeaders:    headers,
-                includeInvoice: includeInvoice
+                includeInvoice: includeInvoiceDocument
             )
 
         case .quote:
