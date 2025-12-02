@@ -120,33 +120,70 @@ public class ContactsListViewModel: ObservableObject {
     }
 
     public func loadAllContacts() async {
-        await MainActor.run {
-            self.isLoading = true
-            self.errorMessage = nil
-        }
+        // TEMP: don’t even toggle isLoading, to be extra sure
+        // await MainActor.run {
+        //     self.isLoading = true
+        //     self.errorMessage = nil
+        // }
+
         do {
-            let all = try await withCheckedThrowingContinuation { cont in
+            _ = try await withCheckedThrowingContinuation { cont in
                 DispatchQueue.global(qos: .userInitiated).async {
                     do {
                         let fetched = try fetchContacts()
+                        print("[ContactsVM] fetched \(fetched.count) contacts")
                         cont.resume(returning: fetched)
                     } catch {
+                        print("[ContactsVM] fetch error: \(error)")
                         cont.resume(throwing: error)
                     }
                 }
             }
-            await MainActor.run {
-                self.contacts = all
-                self.filteredContacts = all  // new assign
-                self.isLoading = false
-            }
+
+            // TEMP: do *not* assign to any @Published here
+            // await MainActor.run {
+            //     self.contacts = all
+            //     self.isLoading = false
+            // }
+
         } catch {
-            await MainActor.run {
-                self.errorMessage = error.localizedDescription
-                self.isLoading = false
-            }
+            // TEMP: also don’t touch errorMessage / isLoading
+            // await MainActor.run {
+            //     self.errorMessage = error.localizedDescription
+            //     self.isLoading = false
+            // }
+            print("[ContactsVM] loadAllContacts error: \(error)")
         }
     }
+
+    // public func loadAllContacts() async {
+    //     await MainActor.run {
+    //         self.isLoading = true
+    //         self.errorMessage = nil
+    //     }
+    //     do {
+    //         let all = try await withCheckedThrowingContinuation { cont in
+    //             DispatchQueue.global(qos: .userInitiated).async {
+    //                 do {
+    //                     let fetched = try fetchContacts()
+    //                     cont.resume(returning: fetched)
+    //                 } catch {
+    //                     cont.resume(throwing: error)
+    //                 }
+    //             }
+    //         }
+    //         await MainActor.run {
+    //             self.contacts = all
+    //             self.filteredContacts = all  // new assign
+    //             self.isLoading = false
+    //         }
+    //     } catch {
+    //         await MainActor.run {
+    //             self.errorMessage = error.localizedDescription
+    //             self.isLoading = false
+    //         }
+    //     }
+    // }
 
     private var filterTask: Task<Void, Never>?
 
