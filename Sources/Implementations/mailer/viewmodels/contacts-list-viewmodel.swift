@@ -119,33 +119,35 @@ public class ContactsListViewModel: ObservableObject {
         // startFiltering()
     }
 
-    public func loadAllContacts() async {
-        await MainActor.run {
-            self.isLoading = true
-            self.errorMessage = nil
-        }
+    public func loadAllContacts() {
+        // We are on the main actor here.
+        isLoading = true
+        errorMessage = nil
 
-        do {
-            _ = try await withCheckedThrowingContinuation { cont in
-                DispatchQueue.global(qos: .userInitiated).async {
-                    do {
-                        let fetched = try fetchContacts()
-                        print("[ContactsVM] fetched \(fetched.count) contacts")
-                        cont.resume(returning: fetched)
-                    } catch {
-                        print("[ContactsVM] fetch error: \(error)")
-                        cont.resume(throwing: error)
-                    }
+        let vm = self
+
+        Task.detached(priority: .userInitiated) { [weak vm] in
+            guard let vm = vm else { return }
+
+            do {
+                // Heavy work off-main
+                let all = try fetchContacts()
+                print("[ContactsVM] fetched \(all.count) contacts")
+
+                // Let anything currently in the runloop finish
+                await Task.yield()
+
+                // Hop back to the main actor from this *separate* task
+                await MainActor.run {
+                    vm.contacts = all
+                    vm.filteredContacts = all
+                    vm.isLoading = false
                 }
-            }
-
-            await MainActor.run {
-                self.isLoading = false
-            }
-        } catch {
-            await MainActor.run {
-                self.isLoading = false
-                self.errorMessage = error.localizedDescription
+            } catch {
+                await MainActor.run {
+                    vm.errorMessage = error.localizedDescription
+                    vm.isLoading = false
+                }
             }
         }
     }
@@ -236,6 +238,7 @@ public class ContactsListViewModel: ObservableObject {
     }
 
     public func reloadContacts() {
-        Task { await loadAllContacts() }
+        // Task { await loadAllContacts() }
+        loadAllContacts() 
     }
 }
