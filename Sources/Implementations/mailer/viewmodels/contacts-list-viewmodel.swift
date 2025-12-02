@@ -120,11 +120,10 @@ public class ContactsListViewModel: ObservableObject {
     }
 
     public func loadAllContacts() async {
-        // TEMP: don’t even toggle isLoading, to be extra sure
-        // await MainActor.run {
-        //     self.isLoading = true
-        //     self.errorMessage = nil
-        // }
+        await MainActor.run {
+            self.isLoading = true
+            self.errorMessage = nil
+        }
 
         do {
             _ = try await withCheckedThrowingContinuation { cont in
@@ -140,19 +139,14 @@ public class ContactsListViewModel: ObservableObject {
                 }
             }
 
-            // TEMP: do *not* assign to any @Published here
-            // await MainActor.run {
-            //     self.contacts = all
-            //     self.isLoading = false
-            // }
-
+            await MainActor.run {
+                self.isLoading = false
+            }
         } catch {
-            // TEMP: also don’t touch errorMessage / isLoading
-            // await MainActor.run {
-            //     self.errorMessage = error.localizedDescription
-            //     self.isLoading = false
-            // }
-            print("[ContactsVM] loadAllContacts error: \(error)")
+            await MainActor.run {
+                self.isLoading = false
+                self.errorMessage = error.localizedDescription
+            }
         }
     }
 
