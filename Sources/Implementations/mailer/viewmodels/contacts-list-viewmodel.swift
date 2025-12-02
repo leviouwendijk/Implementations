@@ -119,67 +119,67 @@ public class ContactsListViewModel: ObservableObject {
         // startFiltering()
     }
 
-    public func loadAllContacts() {
-        // We are on the main actor here.
-        isLoading = true
-        errorMessage = nil
+    // public func loadAllContacts() {
+    //     // We are on the main actor here.
+    //     isLoading = true
+    //     errorMessage = nil
 
-        let vm = self
+    //     let vm = self
 
-        Task.detached(priority: .userInitiated) { [weak vm] in
-            guard let vm = vm else { return }
+    //     Task.detached(priority: .userInitiated) { [weak vm] in
+    //         guard let vm = vm else { return }
 
-            do {
-                // Heavy work off-main
-                let all = try fetchContacts()
-                print("[ContactsVM] fetched \(all.count) contacts")
+    //         do {
+    //             // Heavy work off-main
+    //             let all = try fetchContacts()
+    //             print("[ContactsVM] fetched \(all.count) contacts")
 
-                // Let anything currently in the runloop finish
-                await Task.yield()
+    //             // Let anything currently in the runloop finish
+    //             await Task.yield()
 
-                // Hop back to the main actor from this *separate* task
-                await MainActor.run {
-                    vm.contacts = all
-                    vm.filteredContacts = all
-                    vm.isLoading = false
-                }
-            } catch {
-                await MainActor.run {
-                    vm.errorMessage = error.localizedDescription
-                    vm.isLoading = false
-                }
-            }
-        }
-    }
-
-    // public func loadAllContacts() async {
-    //     await MainActor.run {
-    //         self.isLoading = true
-    //         self.errorMessage = nil
-    //     }
-    //     do {
-    //         let all = try await withCheckedThrowingContinuation { cont in
-    //             DispatchQueue.global(qos: .userInitiated).async {
-    //                 do {
-    //                     let fetched = try fetchContacts()
-    //                     cont.resume(returning: fetched)
-    //                 } catch {
-    //                     cont.resume(throwing: error)
-    //                 }
+    //             // Hop back to the main actor from this *separate* task
+    //             await MainActor.run {
+    //                 vm.contacts = all
+    //                 vm.filteredContacts = all
+    //                 vm.isLoading = false
     //             }
-    //         }
-    //         await MainActor.run {
-    //             self.contacts = all
-    //             self.filteredContacts = all  // new assign
-    //             self.isLoading = false
-    //         }
-    //     } catch {
-    //         await MainActor.run {
-    //             self.errorMessage = error.localizedDescription
-    //             self.isLoading = false
+    //         } catch {
+    //             await MainActor.run {
+    //                 vm.errorMessage = error.localizedDescription
+    //                 vm.isLoading = false
+    //             }
     //         }
     //     }
     // }
+
+    public func loadAllContacts() async {
+        await MainActor.run {
+            self.isLoading = true
+            self.errorMessage = nil
+        }
+        do {
+            let all = try await withCheckedThrowingContinuation { cont in
+                DispatchQueue.global(qos: .userInitiated).async {
+                    do {
+                        let fetched = try fetchContacts()
+                        cont.resume(returning: fetched)
+                    } catch {
+                        cont.resume(throwing: error)
+                    }
+                }
+            }
+            await MainActor.run {
+                self.contacts = all
+                self.filteredContacts = all  // new assign
+                self.isLoading = false
+            }
+        } catch {
+            await MainActor.run {
+                self.errorMessage = error.localizedDescription
+                self.isLoading = false
+            }
+        }
+    }
 
     private var filterTask: Task<Void, Never>?
 
@@ -195,7 +195,7 @@ public class ContactsListViewModel: ObservableObject {
                    a.0.count == b.0.count && a.1 == b.1 && a.2 == b.2
                 }
                 .debounce(
-                   for: .milliseconds(200),
+                   for: .milliseconds(100),
                    scheduler: DispatchQueue.global(qos: .userInitiated)
                 )
                 .values
@@ -223,7 +223,7 @@ public class ContactsListViewModel: ObservableObject {
                 await Task.yield()
 
                 await MainActor.run {
-                    withAnimation(.easeInOut(duration: 0.25)) {
+                    withAnimation(.easeInOut(duration: 0.1)) {
                         self.isFuzzyFiltering = false
                         self.filteredContacts = results
                     }
@@ -238,7 +238,7 @@ public class ContactsListViewModel: ObservableObject {
     }
 
     public func reloadContacts() {
-        // Task { await loadAllContacts() }
-        loadAllContacts() 
+        Task { await loadAllContacts() }
+        // loadAllContacts() 
     }
 }
