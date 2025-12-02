@@ -116,7 +116,7 @@ public class ContactsListViewModel: ObservableObject {
     // NEW CONCURRENCY IMPLEMENTATION
 
     public init() {
-        Task { await loadAllContacts() }
+        // Task { await loadAllContacts() }
         startFiltering()
     }
 
