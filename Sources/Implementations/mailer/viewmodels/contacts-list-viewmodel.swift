@@ -117,7 +117,7 @@ public class ContactsListViewModel: ObservableObject {
 
     public init() {
         // Task { await loadAllContacts() }
-        startFiltering()
+        // startFiltering()
     }
 
     public func loadAllContacts() async {
