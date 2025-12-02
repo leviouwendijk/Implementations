@@ -114,7 +114,6 @@ public class ContactsListViewModel: ObservableObject {
 
 
     // NEW CONCURRENCY IMPLEMENTATION
-
     public init() {
         // Task { await loadAllContacts() }
         // startFiltering()
@@ -138,6 +137,7 @@ public class ContactsListViewModel: ObservableObject {
             }
             await MainActor.run {
                 self.contacts = all
+                self.filteredContacts = all  // new assign
                 self.isLoading = false
             }
         } catch {
