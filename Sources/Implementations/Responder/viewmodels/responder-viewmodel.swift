@@ -128,7 +128,9 @@ public class ResponderViewModel: ObservableObject {
     // ADDING DATE PICKER 
     @Published public var appointmentsQueue: [MailerAPIAppointmentContent] = [] 
 
-    @Published public var year = Calendar.current.component(.year, from: Date())
+    @Published public var year = Calendar.current.component(.year, from: Date()) {
+        didSet { validateDay() }
+    }
     @Published public var selectedMonth = Calendar.current.component(.month, from: Date()) {
         didSet { validateDay() }
     }
