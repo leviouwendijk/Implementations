@@ -113,9 +113,9 @@ public struct ExpirationSettingInputs: Sendable {
     public var unit: DateDistanceUnit
     public var interval: String
     
-    public var result: ExpirationSetting? {
-        return try? expirationSetting()
-    }
+    // public var result: ExpirationSetting? {
+    //     return try? expirationSetting()
+    // }
     
     public init(
         start: Date = Date(),
@@ -127,20 +127,21 @@ public struct ExpirationSettingInputs: Sendable {
         self.interval = interval
     }
 
-    public func range() throws -> ExpirationDateRange {
+    // public func range() throws -> ExpirationDateRange {
+    public func range() throws -> DateRange {
         guard let count = Int(interval) else {
             throw InputConversionError.invalidNumber("‘\(interval)’ is not a number")
         }
 
         let comps = try unit.components(count: count)
         let end = start + comps
-        return ExpirationDateRange(start: start, end: end)
+        return .init(start: start, end: end)
     }
 
-    public func expirationSetting() throws -> ExpirationSetting {
-        let range = try range()
-        return ExpirationSetting(using: range)
-    }
+    // public func expirationSetting() throws -> ExpirationSetting {
+    //     let range = try range()
+    //     return ExpirationSetting(using: range)
+    // }
 }
 
 public struct CustomQuotaInputs: Sendable {
@@ -177,7 +178,8 @@ public struct CustomQuotaInputs: Sendable {
         let sugg = try suggestion.sessionCountEstimation()
         let sing = try singular.sessionCountEstimation()
         let trav = try travelCost.travelCost()
-        let exp = try expiration.expirationSetting()
+        // let exp = try expiration.expirationSetting()
+        let exp = try expiration.range()
 
         return try CustomQuota(
             base: ba,
