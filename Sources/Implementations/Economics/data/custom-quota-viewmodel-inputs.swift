@@ -116,6 +116,10 @@ public struct ExpirationSettingInputs: Sendable {
     // public var result: ExpirationSetting? {
     //     return try? expirationSetting()
     // }
+
+    public var result: DateRange? {
+        return try? range()
+    }
     
     public init(
         start: Date = Date(),
