@@ -39,6 +39,11 @@ let package = Package(
             url: "https://github.com/leviouwendijk/Commerce.git",
             branch: "master"
         ),
+
+        .package(
+            url: "https://github.com/leviouwendijk/Version.git",
+            branch: "master"
+        ),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -52,6 +57,7 @@ let package = Package(
                 .product(name: "Interfaces", package: "Interfaces"),
                 .product(name: "Economics", package: "Economics"),
                 .product(name: "Commerce", package: "Commerce"),
+                .product(name: "Version", package: "Version"),
             ],
             resources: [
                 .process("Resources")
