@@ -60,7 +60,7 @@ public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws {
     // let logoPath = try LoadableResource(name: "logo", fileExtension: "png").path()
     let logoPath = try ResourcesEnvironment.require(.h_logo)
     let logoRepl_legacy = StringTemplateReplacement(placeholders: ["logo_path"], replacement: logoPath, initializer: .auto)
-    let logoRepl_new = StringTemplateReplacement(placeholders: ["logo_mark"], replacement: logoPath, initializer: .auto)
+    let logoRepl_new = StringTemplateReplacement(placeholders: ["logomark_image"], replacement: logoPath, initializer: .auto)
     repls.append(logoRepl_legacy)
     repls.append(logoRepl_new)
 
