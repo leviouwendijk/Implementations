@@ -81,16 +81,36 @@ public class ResponderViewModel: ObservableObject {
 
     @Published public var pickerMode: Bool
 
+    // public var agreementDeliverable: AgreementDeliverable {
+    //     let overrideDuration: Bool = (!fromMinutes.isEmpty && !toMinutes.isEmpty)
+    //     let from = Int(fromMinutes) ?? 0
+    //     let to = Int(toMinutes) ?? 0
+    //     let duration = overrideDuration ? AgreementDeliverableSessionDurationRange(fromMinutes: from, toMinutes: to) : AgreementDeliverableSessionDurationRange()
+
+    //     return AgreementDeliverable(
+    //         name: deliverable,
+    //         sessions: AgreementDeliverableSessions(
+    //             count: Int(sessions) ?? 0,
+    //             duration: duration
+    //         ),
+    //         price: Double(price) ?? 0.0
+    //     )
+    // }
+
     public var agreementDeliverable: AgreementDeliverable {
         let overrideDuration: Bool = (!fromMinutes.isEmpty && !toMinutes.isEmpty)
         let from = Int(fromMinutes) ?? 0
         let to = Int(toMinutes) ?? 0
-        let duration = overrideDuration ? AgreementDeliverableSessionDurationRange(fromMinutes: from, toMinutes: to) : AgreementDeliverableSessionDurationRange()
+        let duration = overrideDuration
+            ? AgreementDeliverableSessionDurationRange(fromMinutes: from, toMinutes: to)
+            : AgreementDeliverableSessionDurationRange()
+
+        let count = parseSessionCountOptional(sessions)
 
         return AgreementDeliverable(
             name: deliverable,
             sessions: AgreementDeliverableSessions(
-                count: Int(sessions) ?? 0,
+                count: count,
                 duration: duration
             ),
             price: Double(price) ?? 0.0
@@ -684,5 +704,29 @@ public class ResponderViewModel: ObservableObject {
                 placeholderSyntax: syntax
             ),
         ]
+    }
+
+    private func parseSessionCountOptional(_ raw: String) -> AgreementDeliverableSessionCount? {
+        let s = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        if s.isEmpty { return nil }
+
+        if let n = Int(s) {
+            return .exact(n)
+        }
+
+        let normalized = s
+            .replacingOccurrences(of: "–", with: "-")
+            .replacingOccurrences(of: "—", with: "-")
+            .replacingOccurrences(of: "..", with: "-")
+
+        let parts = normalized
+            .split(separator: "-", omittingEmptySubsequences: true)
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+
+        if parts.count == 2, let low = Int(parts[0]), let high = Int(parts[1]) {
+            return .range(.init(low: low, high: high))
+        }
+
+        return .text(s)
     }
 }

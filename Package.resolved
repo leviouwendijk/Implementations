@@ -1,6 +1,15 @@
 {
-  "originHash" : "aac7dddeb4a41223b3c4c50d43ce5396b81d9ee4f7e40468e140494cdbb4ae11",
+  "originHash" : "c925d74523a9711c669fc019d52e770f19c71557364db2bcba8312bb89e449cc",
   "pins" : [
+    {
+      "identity" : "clipboard",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Clipboard.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "25d4edb471b4b19a854b0bf4f35beb47f1aca421"
+      }
+    },
     {
       "identity" : "commerce",
       "kind" : "remoteSourceControl",
@@ -52,7 +61,7 @@
       "location" : "https://github.com/leviouwendijk/Path.git",
       "state" : {
         "branch" : "master",
-        "revision" : "b18278a4832ef11e4d6c8051e1ff1c03363c03a5"
+        "revision" : "72c11a9132f5b30aa4ef477060cf39142df8b117"
       }
     },
     {
@@ -61,7 +70,7 @@
       "location" : "https://github.com/leviouwendijk/plate.git",
       "state" : {
         "branch" : "master",
-        "revision" : "8602767890efcba15289aaa64f6cfe5a2f608b19"
+        "revision" : "b83a19b7d494bffd85d36da5733520c2b475ef80"
       }
     },
     {
@@ -70,7 +79,16 @@
       "location" : "https://github.com/leviouwendijk/Primitives.git",
       "state" : {
         "branch" : "master",
-        "revision" : "5a595a4da45183ce9b7d41ba34fb8486017312ef"
+        "revision" : "f7c2d22952ba235c3078b590ccf695ac783e87fe"
+      }
+    },
+    {
+      "identity" : "strings",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Strings.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "86a939d7bbb3e25808f88fbcedcee4069a5a5ae1"
       }
     },
     {
@@ -79,7 +97,7 @@
       "location" : "https://github.com/leviouwendijk/Structures.git",
       "state" : {
         "branch" : "master",
-        "revision" : "640ecf20394cd49d1947d9eff424e877986e5b41"
+        "revision" : "48b826ed371ddfaaa800e3ceb57797e29fd9b59b"
       }
     },
     {
@@ -88,7 +106,7 @@
       "location" : "https://github.com/leviouwendijk/Terminal.git",
       "state" : {
         "branch" : "master",
-        "revision" : "f71bcf025c0f480c775d9a4fdb6d3ea3db4b33cf"
+        "revision" : "972943a2d925f8ba4bebf99c1af590de8fe896e0"
       }
     },
     {

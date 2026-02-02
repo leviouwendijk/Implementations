@@ -2,6 +2,7 @@ import Foundation
 import plate
 import Economics
 import Interfaces
+import Clipboard
 
 public func pdfFromHtmlString(
     html: String,
