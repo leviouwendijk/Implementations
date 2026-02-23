@@ -16,7 +16,9 @@ public class IncomeAllocatorAccountsViewModel: ObservableObject {
 
     @Published private(set) var selectedAccountAmount: Double = 0
 
-    private let allocations: [IncomeAllocation]
+    // private let allocations: [IncomeAllocation]
+    private var allocations: [IncomeAllocation] = []
+
     private var cancellables = Set<AnyCancellable>()
 
     public var incomeTextCleaned: String { incomeText.cleanedNumberInput() }
@@ -25,19 +27,44 @@ public class IncomeAllocatorAccountsViewModel: ObservableObject {
 
     @Published public var textReport: String = ""
 
+    // using preset state
+    @Published public var selectedPreset: IncomeAllocationPreset = .defaults
+
     public var errorMessage = ""
 
+    // public init(
+    //     allocations: [IncomeAllocation]? = nil
+    // ) throws {
+    //     let defaults = try IncomeAllocationProvider.defaults()
+    //     self.allocations = allocations?.sorted(by: { $0.order < $1.order }) ?? defaults.sorted(by: { $0.order < $1.order })
+    //     bindInputs()
+    //     recalculateAllocations()
+    //     recalculateTargets()
+    // }
     public init(
         allocations: [IncomeAllocation]? = nil
     ) throws {
-        let defaults = try IncomeAllocationProvider.defaults()
-        self.allocations = allocations?.sorted(by: { $0.order < $1.order }) ?? defaults.sorted(by: { $0.order < $1.order })
+        if let allocations {
+            self.allocations = allocations.sorted(by: { $0.order < $1.order })
+        } else {
+            self.allocations = try selectedPreset
+                .allocations()
+                .sorted(by: { $0.order < $1.order })
+        }
+
         bindInputs()
         recalculateAllocations()
         recalculateTargets()
     }
 
     private func bindInputs() {
+        $selectedPreset
+            .removeDuplicates()
+            .sink { [weak self] preset in
+                self?.applyPreset(preset)
+            }
+            .store(in: &cancellables)
+
         $incomeText
             .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
             .sink { [weak self] _ in 
@@ -114,5 +141,20 @@ public class IncomeAllocatorAccountsViewModel: ObservableObject {
         } else {
             projectedBalanceText = ""
         }
+    }
+
+    private func applyPreset(_ preset: IncomeAllocationPreset) {
+        do {
+            allocations = try preset
+                .allocations()
+                .sorted(by: { $0.order < $1.order })
+            errorMessage = ""
+        } catch {
+            allocations = []
+            errorMessage = "Failed to load preset \(preset.rawValue): \(error)"
+        }
+
+        recalculateAllocations()
+        recalculateTargets()
     }
 }
