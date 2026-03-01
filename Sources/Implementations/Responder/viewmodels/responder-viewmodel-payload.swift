@@ -9,6 +9,7 @@ public enum ResponderViewModelError: LocalizedError {
     case faultyArgument
     case incompatibleEndpoint
     case incompatibleSubEndpoint
+    case missingProgramPDF(String)
     
     public var errorDescription: String? {
         switch self {
@@ -22,6 +23,8 @@ public enum ResponderViewModelError: LocalizedError {
             return "This endpoint cannot work with this route"
         case .incompatibleSubEndpoint:
             return "This sub-endpoint cannot work with this route or endpoint"
+        case .missingProgramPDF(let dir):
+            return "No program PDF found in \(dir)"
         }
     }
 }
@@ -154,6 +157,25 @@ extension ResponderViewModel {
                     email: email,
                     deliverable: agreementDeliverable
                 )
+                // return try QuoteAgreementPayload(
+                //     endpoint:      endpoint,
+                //     variables:     vars,
+                //     emailsTo:      toList,
+                //     emailsCC:      ccList,
+                //     emailsBCC:     bccList,
+                //     emailsReplyTo: replyList,
+                //     attachments:   nil,
+                //     addHeaders:    headers,
+                //     includeQuote:  includeQuoteOverride
+                // )
+                
+                var extraAttachments: [MailerAPIEmailAttachment] = []
+                if includeProgramOverride {
+                    let programURL = try latestProgramPDF()
+                    let programAttachment = try MailerAPIEmailAttachment(path: programURL.path)
+                    extraAttachments.append(programAttachment)
+                }
+
                 return try QuoteAgreementPayload(
                     endpoint:      endpoint,
                     variables:     vars,
@@ -161,7 +183,7 @@ extension ResponderViewModel {
                     emailsCC:      ccList,
                     emailsBCC:     bccList,
                     emailsReplyTo: replyList,
-                    attachments:   nil,
+                    attachments:   extraAttachments.isEmpty ? nil : extraAttachments,
                     addHeaders:    headers,
                     includeQuote:  includeQuoteOverride
                 )
@@ -344,5 +366,32 @@ extension ResponderViewModel {
                 addHeaders:    headers
             )
         }
+    }
+
+    private func latestProgramPDF() throws -> URL {
+        let dir = ResponderPath.program_default.directory_url
+
+        let fm = FileManager.default
+        if !fm.fileExists(atPath: dir.path) {
+            throw ResponderViewModelError.missingProgramPDF(dir.path)
+        }
+
+        let urls = try fm.contentsOfDirectory(
+            at: dir,
+            includingPropertiesForKeys: [.contentModificationDateKey, .isRegularFileKey],
+            options: [.skipsHiddenFiles]
+        )
+
+        let pdfs = urls.filter { $0.pathExtension.lowercased() == "pdf" }
+
+        func modDate(_ u: URL) -> Date {
+            (try? u.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
+        }
+
+        guard let newest = pdfs.max(by: { modDate($0) < modDate($1) }) else {
+            throw ResponderViewModelError.missingProgramPDF(dir.path)
+        }
+
+        return newest.standardizedFileURL
     }
 }

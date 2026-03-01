@@ -132,8 +132,8 @@ public class ResponderViewModel: ObservableObject {
     @Published public var subject: String = ""
 
     @Published public var includeQuoteOverride = false
-
     @Published public var includeInvoiceDocument = true
+    @Published public var includeProgramOverride = false
 
     // @Published public var selectedWAMessage: WAMessageTemplate = .calledVariationI
     @Published public var messagesStore: ReusableTextMessageStore = .init()
@@ -408,6 +408,9 @@ public class ResponderViewModel: ObservableObject {
         clearQueue()
         if includeQuoteOverride {
             includeQuoteOverride = false
+        }
+        if includeProgramOverride {
+            includeProgramOverride = false
         }
     }
 
