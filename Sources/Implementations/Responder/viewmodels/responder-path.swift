@@ -1,4 +1,5 @@
 import Path
+import FileTypes
 
 public enum ResponderPath: StandardEnvironmentPath {
     case program_default

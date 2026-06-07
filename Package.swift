@@ -54,6 +54,11 @@ let package = Package(
             url: "https://github.com/leviouwendijk/Path.git",
             branch: "master"
         ),
+
+        .package(
+            url: "https://github.com/leviouwendijk/FileTypes.git",
+            branch: "master"
+        ),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -70,6 +75,7 @@ let package = Package(
                 .product(name: "Version", package: "Version"),
                 .product(name: "Clipboard", package: "Clipboard"),
                 .product(name: "Path", package: "Path"),
+                .product(name: "FileTypes", package: "FileTypes"),
             ],
             resources: [
                 .process("Resources")
