@@ -209,15 +209,20 @@ public class ContactsListViewModel: ObservableObject {
                     }
                 }
 
-                let results: [CNContact] = await withCheckedContinuation { cont in
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        let filtered = allContacts.filteredClientContacts(
-                            matching: query.normalizedForClientDogSearch,
-                            fuzzyTolerance: strictness.tolerance
-                        )
-                        cont.resume(returning: filtered)
-                    }
-                }
+                // let results: [CNContact] = await withCheckedContinuation { cont in
+                //     DispatchQueue.global(qos: .userInitiated).async {
+                //         let filtered = allContacts.filteredClientContacts(
+                //             matching: query.normalizedForClientDogSearch,
+                //             fuzzyTolerance: strictness.tolerance
+                //         )
+                //         cont.resume(returning: filtered)
+                //     }
+                // }
+
+                let results: [CNContact] = allContacts.filteredClientContacts(
+                    matching: query.normalizedForClientDogSearch,
+                    fuzzyTolerance: strictness.tolerance
+                )
                 if Task.isCancelled { break }
 
                 await Task.yield()
