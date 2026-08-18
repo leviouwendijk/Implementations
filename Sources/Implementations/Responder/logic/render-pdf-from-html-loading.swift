@@ -9,10 +9,10 @@ public func pdfFromHtmlString(
     destination: String,
     replacements: [StringTemplateReplacement],
     replaceEmpties: Bool = false
-) throws {
+) async throws {
     let converter = StringTemplateConverter(text: html, replacements: replacements)
     let html = converter.replace(replaceEmpties: replaceEmpties)
-    try html.weasyPDF(destination: destination)
+    try await html.weasyPDF(destination: destination)
     try copyFileObjectToClipboard(path: destination)
 }
 

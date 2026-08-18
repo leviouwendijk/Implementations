@@ -30,7 +30,7 @@ public enum ResponderViewModelError: LocalizedError {
 }
 
 extension ResponderViewModel {
-    public func makePayload() throws -> any MailerAPIPayload {
+    public func makePayload() async throws -> any MailerAPIPayload {
         let toList     = finalEmail.split(separator: ",").map(String.init)
         let ccList:    [String]        = []
         let bccList:   [String]?       = nil
@@ -120,7 +120,7 @@ extension ResponderViewModel {
                 ? "" : invoiceVm.invoiceVariables.invoice_id
             guard !rn_id.isEmpty else { throw ResponderViewModelError.missingEndpointDataVariable }
 
-            try invoiceVm.hydrateFromNumbers(using: rn_id, closeNumbersAfterExport: false)
+            try await invoiceVm.hydrateFromNumbers(using: rn_id, closeNumbersAfterExport: false)
 
             let vars = invoiceVm.invoiceVariables 
 

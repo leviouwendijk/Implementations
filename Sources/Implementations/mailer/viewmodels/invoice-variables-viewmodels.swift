@@ -35,7 +35,7 @@ public class MailerAPIInvoiceVariablesViewModel: ObservableObject {
         )
     }
 
-    public func renderDataFromInvoiceId() throws {
+    public func renderDataFromInvoiceId() async throws {
         let parser = try NumbersParser(
             value: invoiceVariables.invoice_id,
             close: false,
@@ -43,20 +43,23 @@ public class MailerAPIInvoiceVariablesViewModel: ObservableObject {
             openingMethod: .direct
         )
 
-        try parser.renderInvoice()
+        try await parser.renderInvoice()
     }
 }
 
 extension MailerAPIInvoiceVariablesViewModel {
     /// Full CLI-equivalent hydration: run Numbers export and then read the reparsed JSON.
-    public func hydrateFromNumbers(using referenceOrId: String, closeNumbersAfterExport: Bool = false) throws {
+    public func hydrateFromNumbers(
+        using referenceOrId: String,
+        closeNumbersAfterExport: Bool = false
+    ) async throws {
         let parser = try NumbersParser(
             value: referenceOrId,
             close: closeNumbersAfterExport,
             openAfterwards: false,
             openingMethod: .direct
         )
-        try parser.renderInvoice()              // identical pipeline the CLI used. 
+        try await parser.renderInvoice()              // identical pipeline the CLI used. 
 
         try getCurrentInvoiceRender()
     }

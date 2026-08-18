@@ -582,10 +582,10 @@ public class ResponderViewModel: ObservableObject {
         let message: String?
     }
 
-    public func send() throws {
+    public func send() async throws {
         guard beginSendIfPossible() else { return }
 
-        let payload = try makePayload()
+        let payload = try await makePayload()
 
         mailerOutput = ""
         withAnimation { isSendingEmail = true }

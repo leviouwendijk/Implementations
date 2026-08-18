@@ -37,7 +37,10 @@ import Interfaces
 //     public let outputPath: String
 // }
 
-public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws {
+public func renderTier(
+    quota: CustomQuota,
+    for tier: QuotaTierType
+    ) async throws {
 // public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws -> RenderedTierResult {
     try prepareEnvironment()
 
@@ -73,7 +76,7 @@ public func renderTier(quota: CustomQuota, for tier: QuotaTierType) throws {
     print("out:", outputPath)
 
     // try pdf(template: templatePath, destination: outputPath, replacements: repls)
-    try pdf(template: templatePath, destination: outputPath, replacements: repls)
+    try await pdf(template: templatePath, destination: outputPath, replacements: repls)
     // return RenderedTierResult(
     //     // success: true, // not relevant yet
     //     outputPath: outputPath

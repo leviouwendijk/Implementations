@@ -10,7 +10,7 @@ public func renderInvoice(
     replaceEmpties: Bool = false,
     logo: ResourcesEnvironmentKey = .h_logo,
     template: ResourcesEnvironmentKey = .invoice_template
-) throws {
+) async throws {
     try prepareEnvironment()
 
     // var repls: [StringTemplateReplacement] = invoice.replacements() // this is being worked on in lib: `Commerce`
@@ -25,5 +25,5 @@ public func renderInvoice(
     let outputPath = "\(Home.string())/myworkdir/pdf_output/factuur.pdf"
     print("out:", outputPath)
 
-    try pdf(template: templatePath, destination: outputPath, replacements: repls, replaceEmpties: replaceEmpties)
+    try await pdf(template: templatePath, destination: outputPath, replacements: repls, replaceEmpties: replaceEmpties)
 }

@@ -10,7 +10,7 @@ public func renderCertification(
     replaceEmpties: Bool = false,
     logo: ResourcesEnvironmentKey = .h_logo,
     template: ResourcesEnvironmentKey = .certification_template
-) throws {
+) async throws {
     try prepareEnvironment()
 
     var repls: [StringTemplateReplacement] = certification.replacements()
@@ -28,5 +28,5 @@ public func renderCertification(
     let outputPath = "\(Home.string())/myworkdir/pdf_output/certification.pdf"
     print("out:", outputPath)
 
-    try pdf(template: templatePath, destination: outputPath, replacements: repls, replaceEmpties: replaceEmpties)
+    try await pdf(template: templatePath, destination: outputPath, replacements: repls, replaceEmpties: replaceEmpties)
 }
