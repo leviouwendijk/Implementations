@@ -44,6 +44,7 @@ let package = Package(
             url: "https://github.com/leviouwendijk/Version.git",
             branch: "master"
         ),
+        .package(url: "https://github.com/leviouwendijk/Readers.git", branch: "master"),
 
         .package(
             url: "https://github.com/leviouwendijk/Clipboard.git",
@@ -73,6 +74,7 @@ let package = Package(
                 .product(name: "Economics", package: "Economics"),
                 .product(name: "Commerce", package: "Commerce"),
                 .product(name: "Version", package: "Version"),
+                .product(name: "Readers", package: "Readers"),
                 .product(name: "Clipboard", package: "Clipboard"),
                 .product(name: "Path", package: "Path"),
                 .product(name: "FileTypes", package: "FileTypes"),
