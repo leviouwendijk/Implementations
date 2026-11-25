@@ -20,15 +20,15 @@ let package = Package(
             branch: "master"
         ),
         .package(
-            url: "https://github.com/leviouwendijk/Structures.git",
+            url: "https://github.com/swift-lco/Structures.git",
             branch: "master"
         ),
         // .package(
-        //     url: "https://github.com/leviouwendijk/ViewComponents.git",
+        //     url: "https://github.com/swift-lco/ViewComponents.git",
         //     branch: "master"
         // ),
         .package(
-            url: "https://github.com/leviouwendijk/Interfaces.git",
+            url: "https://github.com/swift-lco/Interfaces.git",
             branch: "master"
         ),
         .package(
@@ -41,23 +41,23 @@ let package = Package(
         ),
 
         .package(
-            url: "https://github.com/leviouwendijk/Version.git",
+            url: "https://github.com/swift-lco/Version.git",
             branch: "master"
         ),
-        .package(url: "https://github.com/leviouwendijk/Readers.git", branch: "master"),
+        .package(url: "https://github.com/swift-lco/Readers.git", branch: "master"),
 
         .package(
-            url: "https://github.com/leviouwendijk/Clipboard.git",
-            branch: "master"
-        ),
-
-        .package(
-            url: "https://github.com/leviouwendijk/Path.git",
+            url: "https://github.com/swift-lco/Clipboard.git",
             branch: "master"
         ),
 
         .package(
-            url: "https://github.com/leviouwendijk/FileTypes.git",
+            url: "https://github.com/swift-lco/Path.git",
+            branch: "master"
+        ),
+
+        .package(
+            url: "https://github.com/swift-lco/FileTypes.git",
             branch: "master"
         ),
     ],
