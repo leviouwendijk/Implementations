@@ -40,7 +40,7 @@
     {
       "identity" : "commerce",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/leviouwendijk/Commerce.git",
+      "location" : "https://github.com/depaix-labs/Commerce.git",
       "state" : {
         "branch" : "master",
         "revision" : "253af55e0451b6c29d9a78d4bc3791ab0f7b87cd"

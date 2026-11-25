@@ -36,7 +36,7 @@ let package = Package(
             branch: "master"
         ),
         .package(
-            url: "https://github.com/leviouwendijk/Commerce.git",
+            url: "https://github.com/depaix-labs/Commerce.git",
             branch: "master"
         ),
 
